@@ -22,7 +22,7 @@
             letter-spacing: 2px;
         }
 
-        /* 返回首頁按鈕 (時間軸主頁面) */
+        /* 返回首頁按鈕 */
         .back-to-home {
             position: fixed;
             top: 20px;
@@ -76,7 +76,7 @@
             box-sizing: border-box;
         }
 
-        /* 數線上的節點 (震央圖示) */
+        /* 數線上的節點 */
         .container::after {
             content: '';
             position: absolute;
@@ -271,7 +271,7 @@
             animation-delay: 0.3s;
         }
 
-        /* 純左右晃動效果 */
+        /* 左右震動效果 */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
@@ -294,7 +294,7 @@
             100% { transform: translate(50vw, -10vh); opacity: 0; }
         }
 
-        /* RWD 設計 */
+        /* RWD */
         @media screen and (max-width: 600px) {
             .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
             .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
@@ -320,9 +320,9 @@
                 <div class="date">02/25</div>
                 <div class="title">軟體安裝與帳號申請</div>
                 <div class="image-gallery">
-                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png?raw=true" alt="首頁圖片 1">
-                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png?raw=true" alt="首頁圖片 2">
-                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/670af8d749721ca9de84a2459e1cf36e.png?raw=true" alt="首頁圖片 3">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3">
                 </div>
             </div>
         </div>
@@ -427,11 +427,10 @@
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 1秒時（動畫正精彩時）在新分頁打開目標網站，同時悄悄還原主頁面
+            // 1秒時在新分頁打開目標網站，同時還原主網頁
             setTimeout(() => {
                 window.open(targetUrl, '_blank');
                 
-                // 還原主網頁狀態，這樣使用者切換回來時又是完好的時間軸
                 document.body.classList.remove('shake-active');
                 overlay.classList.remove('active');
             }, 1000);
