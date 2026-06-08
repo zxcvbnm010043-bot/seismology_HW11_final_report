@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學期末報告時間軸</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 40px 0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+
+        /* 時間軸主體 */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 中央的數線 */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #7f8c8d;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        /* 時間軸項目容器 */
+        .container {
+            padding: 15px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        /* 數線上的節點 (震央圖示) */
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -13px;
+            background-color: #e74c3c;
+            border: 4px solid #fff;
+            top: 25px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 3px #e74c3c44;
+        }
+
+        .left { left: 0; }
+        .right { left: 50%; }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 28px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 28px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .right::after { left: -15px; }
+
+        /* 內容卡片 */
+        .content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .content:hover { transform: translateY(-5px); }
+        .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
+        .title { font-size: 1.3em; margin-bottom: 15px; }
+
+        /* 特效按鈕 */
+        .quake-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .quake-link:hover { background-color: #e74c3c; }
+
+        /* --- 斷層特效區塊 --- */
+        #quake-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            opacity: 0;
+        }
+
+        #quake-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* 模擬地殼的兩塊面板 */
+        .crust {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a; /* 岩石深色 */
+            background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* 左側地殼 (鋸齒狀邊緣) */
+        .crust.left {
+            clip-path: polygon(0 0, 50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 0 100%);
+        }
+        /* 右側地殼 (鋸齒狀邊緣) */
+        .crust.right {
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 53% 80%, 47% 60%, 52% 40%, 48% 20%);
+        }
+
+        /* 螢幕裂縫紅光特效 */
+        .crack-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 100%;
+            background: #ff4700;
+            clip-path: polygon(50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 48% 100%, 51% 80%, 45% 60%, 50% 40%, 46% 20%, 48% 0);
+            opacity: 0;
+            box-shadow: 0 0 30px 10px #ff4700;
+        }
+
+        /* 觸發動畫 */
+        #quake-overlay.active .crack-line {
+            animation: crackFlash 0.8s ease-in forwards;
+        }
+
+        /* 模擬平移斷層的活動 (向外與上下錯動) */
+        #quake-overlay.active .crust.left {
+            animation: faultLeft 2s ease-in-out forwards;
+            animation-delay: 0.8s;
+        }
+        #quake-overlay.active .crust.right {
+            animation: faultRight 2s ease-in-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        /* 畫面震動特效 */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-15px, 10px) rotate(-2deg); }
+            20%, 40%, 60%, 80% { transform: translate(15px, -10px) rotate(2deg); }
+        }
+        .shake-active { animation: shake 0.6s ease-in-out infinite; }
+
+        @keyframes crackFlash {
+            0% { opacity: 0; height: 0%; }
+            50% { opacity: 1; height: 50%; }
+            100% { opacity: 1; height: 100%; }
+        }
+
+        @keyframes faultLeft {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-5px, 5px); }
+            30% { transform: translate(5px, -5px); }
+            100% { transform: translate(-40vw, 15vh); opacity: 0.9; } /* 左地殼往左下錯動 */
+        }
+
+        @keyframes faultRight {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(5px, -5px); }
+            30% { transform: translate(-5px, 5px); }
+            100% { transform: translate(40vw, -15vh); opacity: 0.9; } /* 右地殼往右上錯動 */
+        }
+
+        /* RWD 設計 */
+        @media screen and (max-width: 600px) {
+            .timeline::after { left: 31px; }
+            .container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
+            .left::after, .right::after { left: 21px; }
+            .right { left: 0%; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>地震學期末報告</h1>
+
+    <div class="timeline">
+        <div class="container left">
+            <div class="content">
+                <div class="date">02/25</div>
+                <div class="title">軟體安裝與帳號申請</div>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <div class="date">03/04</div>
+                <div class="title">地震學課本第一章</div>
+                <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_ch1/" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <div class="date">03/11</div>
+                <div class="title">張睿明老師演講心得</div>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <div class="date">03/18</div>
+                <div class="title">地震學實驗</div>
+                <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismiology_experience" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <div class="date">04/01</div>
+                <div class="title">參觀國家地震工程研究中心</div>
+                <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <div class="date">04/15</div>
+                <div class="title">期中考</div>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <div class="date">04/22</div>
+                <div class="title">宋冠毅老師演講</div>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <div class="date">04/29</div>
+                <div class="title">地震學第3章</div>
+                <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW7_CH3/" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <div class="date">05/13、05/20</div>
+                <div class="title">震源機制 + 地震學第四章</div>
+                <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <div class="date">05/27</div>
+                <div class="title">初動解繪製震源機制</div>
+                <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">進入網站</a>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <div class="date">06/10</div>
+                <div class="title">期末報告</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quake-overlay">
+        <div class="crust left"></div>
+        <div class="crust right"></div>
+        <div class="crack-line"></div>
+    </div>
+
+    <script>
+        function triggerQuake(event, targetUrl) {
+            // 阻止原本的連結跳轉
+            event.preventDefault();
+            
+            // 讓整個畫面開始劇烈震動
+            document.body.classList.add('shake-active');
+            
+            // 顯示斷層覆蓋層並開始動畫
+            const overlay = document.getElementById('quake-overlay');
+            overlay.classList.add('active');
+
+            // 動畫總時長約 2.8 秒，之後跳轉到指定的網站
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
