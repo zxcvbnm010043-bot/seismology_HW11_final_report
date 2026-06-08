@@ -22,7 +22,7 @@
             letter-spacing: 2px;
         }
 
-        /* 返回首頁按鈕 (頂層時間軸頁面) */
+        /* 返回首頁按鈕 */
         .back-to-home {
             position: fixed;
             top: 20px;
@@ -76,7 +76,7 @@
             box-sizing: border-box;
         }
 
-        /* 數線上的節點 (震央圖示) */
+        /* 數線上的節點 */
         .container::after {
             content: '';
             position: absolute;
@@ -136,6 +136,88 @@
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; }
 
+        /* 圖片排版樣式 */
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .image-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        
+        .image-gallery img:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- 新增：PDF 內嵌預覽樣式 --- */
+        .pdf-viewer {
+            margin-top: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #f9f9f9;
+        }
+        .pdf-title-bar {
+            background-color: #34495e;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .pdf-viewer iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+            display: block;
+        }
+
+        /* 期末報告顯眼效果樣式 */
+        .content.highlight-final {
+            border: 2px solid #e74c3c;
+            background-color: #fff9f9;
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.25);
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+        
+        .final-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+            display: inline-block;
+            animation: blinkEffect 1.5s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.5); transform: scale(1.02); }
+        }
+
+        @keyframes blinkEffect {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* 特效按鈕群組 */
+        .link-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         /* 特效按鈕 */
         .quake-link {
             display: inline-block;
@@ -147,11 +229,12 @@
             font-weight: bold;
             transition: background 0.3s;
             cursor: pointer;
+            text-align: center;
         }
 
         .quake-link:hover { background-color: #e74c3c; }
 
-        /* --- 斷層特效區塊 --- */
+        /* --- 斷層轉場特效區塊 --- */
         #quake-overlay {
             position: fixed;
             top: 0;
@@ -159,17 +242,15 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 9999; /* 動畫蓋在最上層 */
+            z-index: 9999;
             display: flex;
             opacity: 0;
         }
 
         #quake-overlay.active {
             opacity: 1;
-            pointer-events: all;
         }
 
-        /* 模擬地殼的兩塊面板 */
         .crust {
             position: absolute;
             width: 100%;
@@ -178,7 +259,6 @@
             background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
-            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .crust.left {
@@ -188,7 +268,6 @@
             clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 53% 80%, 47% 60%, 52% 40%, 48% 20%);
         }
 
-        /* 螢幕裂縫紅光特效 */
         .crack-line {
             position: absolute;
             top: 0;
@@ -203,95 +282,42 @@
         }
 
         #quake-overlay.active .crack-line {
-            animation: crackFlash 0.8s ease-in forwards;
+            animation: crackFlash 0.3s ease-in forwards;
         }
 
         #quake-overlay.active .crust.left {
-            animation: faultLeft 2s ease-in-out forwards;
-            animation-delay: 0.8s;
+            animation: faultLeft 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            animation-delay: 0.3s;
         }
         #quake-overlay.active .crust.right {
-            animation: faultRight 2s ease-in-out forwards;
-            animation-delay: 0.8s;
+            animation: faultRight 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            animation-delay: 0.3s;
         }
 
-        /* 修正：僅左右晃動，且幅度調整為適中（10px） */
+        /* 左右震動效果 */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
         }
-        .shake-active { animation: shake 0.5s ease-in-out infinite; }
+        .shake-active { animation: shake 0.4s ease-in-out infinite; }
 
         @keyframes crackFlash {
             0% { opacity: 0; height: 0%; }
-            50% { opacity: 1; height: 50%; }
             100% { opacity: 1; height: 100%; }
         }
 
         @keyframes faultLeft {
             0% { transform: translate(0, 0); }
-            10% { transform: translateX(-5px); }
-            30% { transform: translateX(5px); }
-            100% { transform: translate(-40vw, 15vh); opacity: 0.9; }
+            100% { transform: translate(-50vw, 10vh); opacity: 0; }
         }
 
         @keyframes faultRight {
             0% { transform: translate(0, 0); }
-            10% { transform: translateX(5px); }
-            30% { transform: translateX(-5px); }
-            100% { transform: translate(40vw, -15vh); opacity: 0.9; }
+            100% { transform: translate(50vw, -10vh); opacity: 0; }
         }
 
-        /* --- 新增：內嵌網頁全螢幕容器與返回鍵 --- */
-        #page-viewer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: white;
-            z-index: 10000; /* 最高層級，蓋住所有東西 */
-            display: none; /* 預設隱藏 */
-            flex-direction: column;
-        }
-
-        #page-viewer.active {
-            display: flex;
-        }
-
-        .inner-back-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 10001;
-            padding: 10px 20px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 0.95em;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .inner-back-btn:hover {
-            background-color: #e74c3c;
-            transform: scale(1.05);
-        }
-
-        #report-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* RWD 設計 */
+        /* RWD */
         @media screen and (max-width: 600px) {
             .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
             .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
@@ -300,8 +326,6 @@
             .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
             .left::after, .right::after { left: 21px; }
             .right { left: 0%; }
-            .inner-back-btn { bottom: 20px; top: auto; left: 50%; transform: translateX(-50%); } /* 手機版返回鍵放下方方便按 */
-            .inner-back-btn:hover { transform: translateX(-50%) scale(1.05); }
         }
     </style>
 </head>
@@ -318,6 +342,11 @@
             <div class="content">
                 <div class="date">02/25</div>
                 <div class="title">軟體安裝與帳號申請</div>
+                <div class="image-gallery">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3">
+                </div>
             </div>
         </div>
 
@@ -333,6 +362,17 @@
             <div class="content">
                 <div class="date">03/11</div>
                 <div class="title">張睿明老師演講心得</div>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">🌊 海底火山爆發地震</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf&embedded=true"></iframe>
+                </div>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">🤖 AI 演講成果</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
+                </div>
+
             </div>
         </div>
 
@@ -363,6 +403,12 @@
             <div class="content">
                 <div class="date">04/22</div>
                 <div class="title">宋冠毅老師演講</div>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
+                </div>
+
             </div>
         </div>
 
@@ -391,9 +437,9 @@
         </div>
 
         <div class="container left">
-            <div class="content">
-                <div class="date">06/10</div>
-                <div class="title">期末報告</div>
+            <div class="content highlight-final">
+                <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
+                <div class="title" style="font-weight: bold; color: #2c3e50;">期末報告</div>
             </div>
         </div>
     </div>
@@ -404,38 +450,20 @@
         <div class="crack-line"></div>
     </div>
 
-    <div id="page-viewer">
-        <button class="inner-back-btn" onclick="closeReport()">⬅️ 返回時間軸</button>
-        <iframe id="report-frame" src=""></iframe>
-    </div>
-
     <script>
         const overlay = document.getElementById('quake-overlay');
-        const pageViewer = document.getElementById('page-viewer');
-        const reportFrame = document.getElementById('report-frame');
 
         function triggerQuake(event, targetUrl) {
-            event.preventDefault(); // 阻擋預設直接換頁
+            event.preventDefault(); 
             
-            // 觸發純左右地震
+            // 啟動地震特效
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 2.8秒斷層動畫完畢後，開啟內嵌頁面並載入網址
+            // 修改為：在相同分頁直接跳轉 (支援 Hugging Face 正常開啟)
             setTimeout(() => {
-                reportFrame.src = targetUrl;
-                pageViewer.classList.add('active');
-                
-                // 清除地震動畫狀態，以便等一下回來可以重新觸發
-                document.body.classList.remove('shake-active');
-                overlay.classList.remove('active');
-            }, 2800);
-        }
-
-        // 關閉內嵌網頁，回到時間軸
-        function closeReport() {
-            pageViewer.classList.remove('active');
-            reportFrame.src = ""; // 清空網址，省電且避免外部聲音或指令繼續在背景執行
+                window.location.href = targetUrl;
+            }, 1000);
         }
     </script>
 </body>
