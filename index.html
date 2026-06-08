@@ -22,12 +22,12 @@
             letter-spacing: 2px;
         }
 
-        /* --- 新增：返回首頁按鈕樣式 --- */
+        /* 返回首頁按鈕 (頂層時間軸頁面) */
         .back-to-home {
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 999; /* 確保在最上層，但低於地震特效層 */
+            z-index: 999;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -159,7 +159,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 9999; /* 特效蓋在最上層 */
+            z-index: 9999; /* 動畫蓋在最上層 */
             display: flex;
             opacity: 0;
         }
@@ -215,13 +215,13 @@
             animation-delay: 0.8s;
         }
 
-        /* 畫面震動特效 */
+        /* 修正：僅左右晃動，且幅度調整為適中（10px） */
         @keyframes shake {
-            0%, 100% { transform: translate(0, 0) rotate(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-15px, 10px) rotate(-2deg); }
-            20%, 40%, 60%, 80% { transform: translate(15px, -10px) rotate(2deg); }
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
-        .shake-active { animation: shake 0.6s ease-in-out infinite; }
+        .shake-active { animation: shake 0.5s ease-in-out infinite; }
 
         @keyframes crackFlash {
             0% { opacity: 0; height: 0%; }
@@ -231,27 +231,77 @@
 
         @keyframes faultLeft {
             0% { transform: translate(0, 0); }
-            10% { transform: translate(-5px, 5px); }
-            30% { transform: translate(5px, -5px); }
+            10% { transform: translateX(-5px); }
+            30% { transform: translateX(5px); }
             100% { transform: translate(-40vw, 15vh); opacity: 0.9; }
         }
 
         @keyframes faultRight {
             0% { transform: translate(0, 0); }
-            10% { transform: translate(5px, -5px); }
-            30% { transform: translate(-5px, 5px); }
+            10% { transform: translateX(5px); }
+            30% { transform: translateX(-5px); }
             100% { transform: translate(40vw, -15vh); opacity: 0.9; }
+        }
+
+        /* --- 新增：內嵌網頁全螢幕容器與返回鍵 --- */
+        #page-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            z-index: 10000; /* 最高層級，蓋住所有東西 */
+            display: none; /* 預設隱藏 */
+            flex-direction: column;
+        }
+
+        #page-viewer.active {
+            display: flex;
+        }
+
+        .inner-back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10001;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .inner-back-btn:hover {
+            background-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        #report-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* RWD 設計 */
         @media screen and (max-width: 600px) {
-            .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); } /* 手機版移到下方中央方便點擊 */
+            .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
             .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
             .timeline::after { left: 31px; }
             .container { width: 100%; padding-left: 70px; padding-right: 25px; }
             .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
             .left::after, .right::after { left: 21px; }
             .right { left: 0%; }
+            .inner-back-btn { bottom: 20px; top: auto; left: 50%; transform: translateX(-50%); } /* 手機版返回鍵放下方方便按 */
+            .inner-back-btn:hover { transform: translateX(-50%) scale(1.05); }
         }
     </style>
 </head>
@@ -354,16 +404,38 @@
         <div class="crack-line"></div>
     </div>
 
+    <div id="page-viewer">
+        <button class="inner-back-btn" onclick="closeReport()">⬅️ 返回時間軸</button>
+        <iframe id="report-frame" src=""></iframe>
+    </div>
+
     <script>
+        const overlay = document.getElementById('quake-overlay');
+        const pageViewer = document.getElementById('page-viewer');
+        const reportFrame = document.getElementById('report-frame');
+
         function triggerQuake(event, targetUrl) {
-            event.preventDefault();
+            event.preventDefault(); // 阻擋預設直接換頁
+            
+            // 觸發純左右地震
             document.body.classList.add('shake-active');
-            const overlay = document.getElementById('quake-overlay');
             overlay.classList.add('active');
 
+            // 2.8秒斷層動畫完畢後，開啟內嵌頁面並載入網址
             setTimeout(() => {
-                window.location.href = targetUrl;
+                reportFrame.src = targetUrl;
+                pageViewer.classList.add('active');
+                
+                // 清除地震動畫狀態，以便等一下回來可以重新觸發
+                document.body.classList.remove('shake-active');
+                overlay.classList.remove('active');
             }, 2800);
+        }
+
+        // 關閉內嵌網頁，回到時間軸
+        function closeReport() {
+            pageViewer.classList.remove('active');
+            reportFrame.src = ""; // 清空網址，省電且避免外部聲音或指令繼續在背景執行
         }
     </script>
 </body>
