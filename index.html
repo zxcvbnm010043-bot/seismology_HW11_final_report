@@ -156,6 +156,29 @@
             transform: scale(1.02);
         }
 
+        /* --- 新增：PDF 內嵌預覽樣式 --- */
+        .pdf-viewer {
+            margin-top: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #f9f9f9;
+        }
+        .pdf-title-bar {
+            background-color: #34495e;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .pdf-viewer iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+            display: block;
+        }
+
         /* 期末報告顯眼效果樣式 */
         .content.highlight-final {
             border: 2px solid #e74c3c;
@@ -339,10 +362,17 @@
             <div class="content">
                 <div class="date">03/11</div>
                 <div class="title">張睿明老師演講心得</div>
-                <div class="link-group">
-                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf" onclick="triggerQuake(event, this.href)">🌊 海底火山爆發地震</a>
-                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf" onclick="triggerQuake(event, this.href)">🤖 AI 演講成果</a>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">🌊 海底火山爆發地震</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf&embedded=true"></iframe>
                 </div>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">🤖 AI 演講成果</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
+                </div>
+
             </div>
         </div>
 
@@ -373,9 +403,12 @@
             <div class="content">
                 <div class="date">04/22</div>
                 <div class="title">宋冠毅老師演講</div>
-                <div class="link-group">
-                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf" onclick="triggerQuake(event, this.href)">📝 宋冠毅老師演講心得</a>
+                
+                <div class="pdf-viewer">
+                    <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
+                    <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
                 </div>
+
             </div>
         </div>
 
@@ -421,18 +454,15 @@
         const overlay = document.getElementById('quake-overlay');
 
         function triggerQuake(event, targetUrl) {
-            event.preventDefault(); // 阻擋原視窗直接跳轉
+            event.preventDefault(); 
             
-            // 啟動純左右震動與地殼裂開動畫
+            // 啟動地震特效
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 1秒時在新分頁打開目標網站，同時還原主網頁
+            // 修改為：在相同分頁直接跳轉 (支援 Hugging Face 正常開啟)
             setTimeout(() => {
-                window.open(targetUrl, '_blank');
-                
-                document.body.classList.remove('shake-active');
-                overlay.classList.remove('active');
+                window.location.href = targetUrl;
             }, 1000);
         }
     </script>
