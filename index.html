@@ -136,6 +136,65 @@
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; }
 
+        /* 02/25 新增：圖片排版樣式 */
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .image-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        
+        .image-gallery img:hover {
+            transform: scale(1.02);
+        }
+
+        /* 06/10 新增：期末報告顯眼效果樣式 */
+        .content.highlight-final {
+            border: 2px solid #e74c3c;
+            background-color: #fff9f9;
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.25);
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+        
+        .final-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+            display: inline-block;
+            animation: blinkEffect 1.5s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.5); transform: scale(1.02); }
+        }
+
+        @keyframes blinkEffect {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* 特效按鈕群組（當有多個連結時排版） */
+        .link-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         /* 特效按鈕 */
         .quake-link {
             display: inline-block;
@@ -147,6 +206,7 @@
             font-weight: bold;
             transition: background 0.3s;
             cursor: pointer;
+            text-align: center;
         }
 
         .quake-link:hover { background-color: #e74c3c; }
@@ -159,7 +219,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 9999; /* 動畫蓋在最上層 */
+            z-index: 9999;
             display: flex;
             opacity: 0;
         }
@@ -169,7 +229,6 @@
             pointer-events: all;
         }
 
-        /* 模擬地殼的兩塊面板 */
         .crust {
             position: absolute;
             width: 100%;
@@ -188,7 +247,6 @@
             clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 53% 80%, 47% 60%, 52% 40%, 48% 20%);
         }
 
-        /* 螢幕裂縫紅光特效 */
         .crack-line {
             position: absolute;
             top: 0;
@@ -243,7 +301,7 @@
             100% { transform: translate(40vw, -15vh); opacity: 0.9; }
         }
 
-        /* --- 新增：內嵌網頁全螢幕容器與返回鍵 --- */
+        /* --- 內嵌網頁全螢幕容器與返回鍵 --- */
         #page-viewer {
             position: fixed;
             top: 0;
@@ -251,8 +309,8 @@
             width: 100vw;
             height: 100vh;
             background-color: white;
-            z-index: 10000; /* 最高層級，蓋住所有東西 */
-            display: none; /* 預設隱藏 */
+            z-index: 10000;
+            display: none;
             flex-direction: column;
         }
 
@@ -300,7 +358,7 @@
             .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
             .left::after, .right::after { left: 21px; }
             .right { left: 0%; }
-            .inner-back-btn { bottom: 20px; top: auto; left: 50%; transform: translateX(-50%); } /* 手機版返回鍵放下方方便按 */
+            .inner-back-btn { bottom: 20px; top: auto; left: 50%; transform: translateX(-50%); }
             .inner-back-btn:hover { transform: translateX(-50%) scale(1.05); }
         }
     </style>
@@ -318,6 +376,11 @@
             <div class="content">
                 <div class="date">02/25</div>
                 <div class="title">軟體安裝與帳號申請</div>
+                <div class="image-gallery">
+                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png?raw=true" alt="首頁圖片 1">
+                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png?raw=true" alt="首頁圖片 2">
+                    <img src="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW1/670af8d749721ca9de84a2459e1cf36e.png?raw=true" alt="首頁圖片 3">
+                </div>
             </div>
         </div>
 
@@ -333,6 +396,10 @@
             <div class="content">
                 <div class="date">03/11</div>
                 <div class="title">張睿明老師演講心得</div>
+                <div class="link-group">
+                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf" onclick="triggerQuake(event, this.href)">🌊 海底火山爆發地震</a>
+                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf" onclick="triggerQuake(event, this.href)">🤖 AI 演講成果</a>
+                </div>
             </div>
         </div>
 
@@ -363,6 +430,9 @@
             <div class="content">
                 <div class="date">04/22</div>
                 <div class="title">宋冠毅老師演講</div>
+                <div class="link-group">
+                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf" onclick="triggerQuake(event, this.href)">📝 宋冠毅老師演講心得</a>
+                </div>
             </div>
         </div>
 
@@ -391,9 +461,9 @@
         </div>
 
         <div class="container left">
-            <div class="content">
-                <div class="date">06/10</div>
-                <div class="title">期末報告</div>
+            <div class="content highlight-final">
+                <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
+                <div class="title" style="font-weight: bold; color: #2c3e50;">期末報告</div>
             </div>
         </div>
     </div>
@@ -415,27 +485,26 @@
         const reportFrame = document.getElementById('report-frame');
 
         function triggerQuake(event, targetUrl) {
-            event.preventDefault(); // 阻擋預設直接換頁
+            event.preventDefault(); // 阻擋預設換頁
             
-            // 觸發純左右地震
+            // 觸發修正後的水平左右地震
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 2.8秒斷層動畫完畢後，開啟內嵌頁面並載入網址
+            // 2.8秒動畫完畢後，載入內嵌視窗
             setTimeout(() => {
                 reportFrame.src = targetUrl;
                 pageViewer.classList.add('active');
                 
-                // 清除地震動畫狀態，以便等一下回來可以重新觸發
+                // 還原動畫狀態以便下次觸發
                 document.body.classList.remove('shake-active');
                 overlay.classList.remove('active');
             }, 2800);
         }
 
-        // 關閉內嵌網頁，回到時間軸
         function closeReport() {
             pageViewer.classList.remove('active');
-            reportFrame.src = ""; // 清空網址，省電且避免外部聲音或指令繼續在背景執行
+            reportFrame.src = ""; // 清空 iframe 節省資源
         }
     </script>
 </body>
