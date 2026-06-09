@@ -7,7 +7,14 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            /* 水彩霓虹渲染背景：多重輕透漸層疊加，中央保持偏白，周圍透出霓虹渲染感 */
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(131, 56, 236, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, rgba(255, 0, 127, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 30% 80%, rgba(255, 190, 11, 0.05) 0%, transparent 40%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(244, 244, 249, 0.95));
+            background-attachment: fixed;
             color: #333;
             margin: 0;
             padding: 40px 0;
@@ -20,6 +27,7 @@
             margin-bottom: 50px;
             font-size: 2.5em;
             letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(131, 56, 236, 0.1);
         }
 
         /* 返回首頁按鈕 */
@@ -125,14 +133,18 @@
         /* 內容卡片 */
         .content {
             padding: 20px 30px;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             position: relative;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
-        .content:hover { transform: translateY(-5px); }
+        .content:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(131, 56, 236, 0.15);
+        }
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; }
 
@@ -150,10 +162,43 @@
             border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             transition: transform 0.2s;
+            cursor: pointer; /* 讓使用者知道圖片可以點擊 */
         }
         
         .image-gallery img:hover {
             transform: scale(1.02);
+        }
+
+        /* 原生燈箱放大效果樣式 */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .lightbox-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 6px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .lightbox-overlay.active img {
+            transform: scale(1);
         }
 
         /* --- PDF 內嵌預覽樣式 --- */
@@ -343,9 +388,9 @@
                 <div class="date">02/25</div>
                 <div class="title">軟體安裝與帳號申請</div>
                 <div class="image-gallery">
-                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1">
-                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2">
-                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1" onclick="openLightbox(this.src)">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2" onclick="openLightbox(this.src)">
+                    <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3" onclick="openLightbox(this.src)">
                 </div>
             </div>
         </div>
@@ -476,11 +521,7 @@
         <div class="container right">
             <div class="content highlight-final">
                 <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
-                <div class="title" style="font-weight: bold; color: #2c3e50;">期末報告</div>
-                <div class="link-group">
-                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report" onclick="triggerQuake(event, this.href)">📦 前往 GitHub 專案庫</a>
-                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report_CH4_report.pdf" onclick="triggerQuake(event, this.href)">📄 檢視 CH4 報告檔案</a>
-                </div>
+                <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 0;">期末報告</div>
             </div>
         </div>
     </div>
@@ -491,20 +532,38 @@
         <div class="crack-line"></div>
     </div>
 
+    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="放大圖片預覽">
+    </div>
+
     <script>
         const overlay = document.getElementById('quake-overlay');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
+        // 地震轉場特效
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
-            // 啟動地震特效
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 在相同分頁直接跳轉 (支援 Hugging Face 與 GitHub Pages 正常開啟)
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000);
+        }
+
+        // 圖片放大功能 (Lightbox)
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                lightboxImg.src = ""; // 關閉後清空圖源，優化記憶體
+            }, 300);
         }
     </script>
 </body>
