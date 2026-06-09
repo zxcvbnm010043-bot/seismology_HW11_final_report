@@ -52,7 +52,7 @@
         .ink-blue { bottom: -10%; left: 5%; width: 600px; height: 600px; background: var(--ink-rgb-blue); animation-duration: 25s; animation-delay: -6s; }
         .ink-accent { top: 45%; right: 20%; width: 450px; height: 450px; background: var(--ink-black-accent); animation-duration: 16s; animation-delay: -1.5s; }
 
-        /* --- 新增：地震觸發時的水墨滴落與暈染容器 --- */
+        /* --- 地震觸發時的水墨滴落與暈染容器 --- */
         #ink-drops-container {
             position: fixed;
             top: 0;
@@ -67,7 +67,7 @@
         /* 墨滴本體樣式 */
         .ink-drop {
             position: absolute;
-            background: rgba(30, 40, 50, 0.85); /* 濃墨色 */
+            background: rgba(30, 40, 50, 0.88); /* 濃墨色 */
             border-radius: 50%;
             opacity: 0;
             filter: url(#ink-disp-filter); /* 同樣套用宣紙暈染濾鏡 */
@@ -75,24 +75,31 @@
             mix-blend-mode: multiply;
         }
 
-        /* 墨滴落下的動畫組合：下墜 -> 著地 -> 擴散變淡 */
-        @keyframes inkSplash {
+        /* 【更新】修正版：真正的物理下墜 -> 變形撞擊 -> 宣紙大面積暈染 動畫 */
+        @keyframes inkSplashRevised {
             0% {
-                transform: translateY(-150px) scaleX(0.6) scaleY(1.3);
+                transform: translateY(0) scaleX(0.5) scaleY(1.5);
                 opacity: 0;
             }
-            20% {
+            15% {
+                opacity: 1; /* 下墜途中現形，增加速度感 */
+            }
+            22% {
+                /* 抵達隨機著陸點 (由 JS 動態計算傳入) */
+                transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1);
+                filter: url(#ink-disp-filter) blur(0px);
                 opacity: 1;
-                transform: translateY(0) scaleX(1) scaleY(1);
             }
             30% {
-                /* 撞擊地面瞬間扁平化 */
-                transform: translateY(0) scaleX(1.5) scaleY(0.7);
+                /* 撞擊地面瞬間：高度壓扁、橫向攤開 */
+                transform: translateY(var(--fall-distance)) scaleX(1.8) scaleY(0.6);
+                filter: url(#ink-disp-filter) blur(2px);
+                opacity: 0.95;
             }
             100% {
-                /* 水墨隨紙張纖維迅速暈開、變大、變淡消失 */
-                transform: translateY(0) scale(4.5);
-                filter: url(#ink-disp-filter) blur(25px);
+                /* 終點：水份隨紙張纖維瘋狂擴散放大 4.5 倍，邊緣強烈毛邊撕裂化並淡出 */
+                transform: translateY(var(--fall-distance)) scale(4.5);
+                filter: url(#ink-disp-filter) blur(28px);
                 opacity: 0;
             }
         }
@@ -517,68 +524,75 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
 
-        // 新增：生成隨機滴落水墨的函式
+        // 高級物理落墨與擴散渲染函式
         function createInkDrops() {
-            // 每次震動隨機產生 5 到 8 顆落墨
-            const dropCount = Math.floor(Math.random() * 4) + 5; 
+            const dropCount = Math.floor(Math.random() * 4) + 6; // 每次震動隨機噴發 6~9 顆水墨滴
             
             for (let i = 0; i < dropCount; i++) {
                 const drop = document.createElement('div');
                 drop.classList.add('ink-drop');
                 
-                // 隨機尺寸 (15px ~ 45px)
-                const size = Math.floor(Math.random() * 30) + 15;
-                // 隨機視窗水平分佈 (5% ~ 95%)
-                const leftPos = Math.floor(Math.random() * 90) + 5;
-                // 隨機視窗垂直著陸點 (20% ~ 80%)
-                const topPos = Math.floor(Math.random() * 60) + 20;
-                // 隨機微調動畫延遲，製造先後落下的錯落感 (0s ~ 0.3s)
-                const delay = Math.random() * 0.3;
-
+                // 1. 隨機決定墨滴大小與水平分佈
+                const size = Math.floor(Math.random() * 25) + 20; // 20px ~ 45px
+                const leftPos = Math.floor(Math.random() * 90) + 5; // 5vw ~ 95vw
+                
+                // 2. 起點固定在視窗正上方外 (-100px)
                 drop.style.width = `${size}px`;
                 drop.style.height = `${size}px`;
                 drop.style.left = `${leftPos}vw`;
-                drop.style.top = `${topPos}vh`;
+                drop.style.top = `-100px`; 
                 
-                // 綁定動態水墨下墜與擴散動畫
-                drop.style.animation = `inkSplash 0.9s cubic-bezier(0.4, 0.01, 0.165, 0.99) ${delay}s forwards`;
+                // 3. 隨機抽選落點高度百分比 (視窗高度的 20% 到 85%)
+                const targetVh = Math.floor(Math.random() * 65) + 20; 
+                
+                // 計算真正的下墜像素距離 (加回起點的 100px)
+                const windowHeight = window.innerHeight;
+                const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
+                
+                // 將計算好的物理距離以 CSS 變數形式傳給 Animation 運算
+                drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
+
+                // 4. 製造落下的前後交錯時間差 (0s ~ 0.25s)
+                const delay = Math.random() * 0.25;
+                
+                // 5. 注入修正後的 CSS 重力與暈染動畫
+                drop.style.animation = `inkSplashRevised 0.95s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s forwards`;
                 
                 dropsContainer.appendChild(drop);
 
-                // 動態完結後將 DOM 移除，避免耗費記憶體
+                // 6. 動畫完整播完後(1.3秒)將節點自 DOM 中完全清除，優化記憶體
                 setTimeout(() => {
                     drop.remove();
                 }, 1300);
             }
         }
 
-        // 地震轉場特效 (整合水墨滴落)
+        // 地震斷層轉場特效 (完美時間協調版)
         function triggerQuake(event, targetUrl) {
-            event.preventDefault(); 
+            event.preventDefault(); // 阻止瀏覽器立即跳轉
             
-            // 1. 觸發網頁左右劇烈搖晃
+            // 1. 網頁主體與時間軸卡片大震動
             document.body.classList.add('shake-active');
             
-            // 2. 瞬間在宣紙背景層滴落並暈開水墨
+            // 2. 瞬間激發高空噴墨下墜效果
             createInkDrops();
             
-            // 3. 啟動裂地斷層轉場
+            // 3. 裂地橘紅斷層轉場啟動
             overlay.classList.add('active');
 
-            // 1 秒後正式跳轉
+            // 4. 精密控制於 1.2 秒後進行網址跳轉，讓眼睛完整捕捉到濃墨著地後散開的宣紙動效
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 1000);
+            }, 1200);
         }
 
-        // 圖片放大功能 (Lightbox)
+        // Lightbox 圖片放大功能
         function openLightbox(src) {
             lightboxImg.src = src;
             lightbox.classList.add('active');
         }
 
         function closeLightbox() {
-            lightbox.classList.remove('remove'); // 修正原本的小 typo
             lightbox.classList.remove('active');
             setTimeout(() => {
                 lightboxImg.src = ""; 
