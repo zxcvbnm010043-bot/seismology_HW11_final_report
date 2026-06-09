@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地震學期末報告時間軸</title>
     <style>
-        /* 全域變數定義霓虹水彩色彩 */
+        /* 全域變數定義：東方霓虹水墨 RGB 色彩與宣紙底色 */
         :root {
-            --color-neon-purple: rgba(131, 56, 236, 0.25);
-            --color-neon-pink: rgba(255, 0, 127, 0.22);
-            --color-neon-cyan: rgba(0, 245, 212, 0.25);
-            --color-neon-yellow: rgba(255, 190, 11, 0.18);
+            /* 調整為具備水墨通透感與霓虹張力的 RGB 三原色暈染色調 */
+            --ink-rgb-red: rgba(255, 20, 100, 0.28);
+            --ink-rgb-green: rgba(0, 230, 118, 0.25);
+            --ink-rgb-blue: rgba(41, 121, 255, 0.28);
+            --ink-black-accent: rgba(44, 62, 80, 0.05); /* 微量焦墨點綴 */
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f6f6fb;
+            background-color: #f7f7fa;
             color: #333;
             margin: 0;
             padding: 40px 0;
@@ -23,7 +24,7 @@
             position: relative;
         }
 
-        /* --- 高級水彩霓虹渲染特效背景層 --- */
+        /* --- 高級東方水墨 RGB 渲染特效背景層 --- */
         .watercolor-background {
             position: fixed;
             top: 0;
@@ -32,62 +33,67 @@
             height: 100vh;
             z-index: -2;
             overflow: hidden;
-            background: #fbfbfd;
-            /* 模擬水彩紙的微小紋理感 */
-            background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 0);
-            background-size: 8px 8px;
+            background: #fbfbf6; /* 帶有一點點微黃的宣紙底色 */
+            /* 模擬宣紙纖維的微小紋理感 */
+            background-image: radial-gradient(rgba(0,0,0,0.02) 1.2px, transparent 0);
+            background-size: 10px 10px;
         }
 
-        /* 透過模糊濾鏡與不規則形狀製造真正的水彩暈染與疊加效果 */
-        .blob {
+        /* 透過 SVG 濾鏡與不規則形狀製造東方水墨之毛邊、擴散與疊加效果 */
+        .ink-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px); /* 大範圍模糊達到暈染 */
-            mix-blend-mode: multiply; /* 讓色彩重疊處像水彩般加深 */
-            opacity: 0.75;
-            animation: floatMove 12s infinite alternate ease-in-out;
+            /* 關鍵：透過 blur 與自訂的 svg 濾鏡產生真實的水墨邊緣撕裂與擴散感 */
+            filter: url(#ink-disp-filter) blur(60px); 
+            mix-blend-mode: multiply; /* 讓 RGB 色彩重疊處像水墨般自然加深與破墨 */
+            opacity: 0.8;
+            animation: inkFlow 20s infinite alternate ease-in-out;
         }
 
-        .blob-1 {
-            top: -10%;
+        /* RGB - 紅墨 (主要分佈在左上與右中) */
+        .ink-red {
+            top: -5%;
             left: -10%;
-            width: 600px;
-            height: 600px;
-            background: var(--color-neon-purple);
-            animation-duration: 16s;
+            width: 650px;
+            height: 650px;
+            background: var(--ink-rgb-red);
+            animation-duration: 22s;
         }
 
-        .blob-2 {
-            top: 10%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: var(--color-neon-pink);
-            animation-duration: 14s;
-            animation-delay: -2s;
-        }
-
-        .blob-3 {
-            bottom: -10%;
-            left: 15%;
+        /* RGB - 綠墨 (主要分佈在右上方) */
+        .ink-green {
+            top: 15%;
+            right: -15%;
             width: 550px;
             height: 550px;
-            background: var(--color-neon-cyan);
+            background: var(--ink-rgb-green);
             animation-duration: 18s;
-            animation-delay: -4s;
+            animation-delay: -3s;
         }
 
-        .blob-4 {
-            top: 40%;
-            left: -5%;
-            width: 400px;
-            height: 400px;
-            background: var(--color-neon-yellow);
-            animation-duration: 12s;
-            animation-delay: -1s;
+        /* RGB - 藍墨 (主要分佈在左下方) */
+        .ink-blue {
+            bottom: -10%;
+            left: 5%;
+            width: 600px;
+            height: 600px;
+            background: var(--ink-blue-accent, var(--ink-rgb-blue));
+            animation-duration: 25s;
+            animation-delay: -6s;
         }
 
-        /* 中央微白遮罩：確保網頁中央好閱讀，只有周圍有漂亮的霓虹水彩暈開 */
+        /* 焦墨/淡墨點綴 (增加傳統水墨山水畫的層次感) */
+        .ink-accent {
+            top: 45%;
+            right: 20%;
+            width: 450px;
+            height: 450px;
+            background: var(--ink-black-accent);
+            animation-duration: 16s;
+            animation-delay: -1.5s;
+        }
+
+        /* 中央微白遮罩：確保網頁中央好閱讀，只有周圍有漂亮的 RGB 水墨暈開 */
         .center-overlay {
             position: fixed;
             top: 0;
@@ -95,14 +101,15 @@
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.1) 100%);
+            background: radial-gradient(circle at center, rgba(251, 251, 246, 0.8) 0%, rgba(251, 251, 246, 0.15) 100%);
             pointer-events: none;
         }
 
-        /* 水彩區塊慢速漂浮動畫，增加畫面靈動感 */
-        @keyframes floatMove {
-            0% { transform: translate(0, 0) scale(1); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-            100% { transform: translate(60px, 40px) scale(1.1); border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%; }
+        /* 水墨沿著紙張纖維慢速擴散與流動動畫 */
+        @keyframes inkFlow {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; }
+            50% { transform: translate(40px, -30px) scale(1.08) rotate(90deg); border-radius: 53% 47% 34% 66% / 50% 36% 64% 50%; }
+            100% { transform: translate(-20px, 50px) scale(0.95) rotate(180deg); border-radius: 45% 55% 60% 40% / 33% 67% 33% 67%; }
         }
 
         h1 {
@@ -110,8 +117,9 @@
             color: #2c3e50;
             margin-bottom: 50px;
             font-size: 2.5em;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 10px rgba(131, 56, 236, 0.1);
+            letter-spacing: 4px;
+            font-weight: 700;
+            text-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
         }
 
         /* 返回首頁按鈕 */
@@ -146,16 +154,16 @@
             margin: 0 auto;
         }
 
-        /* 中央的數線 */
+        /* 中央的數線（調整為帶有水墨風骨的深灰色） */
         .timeline::after {
             content: '';
             position: absolute;
-            width: 6px;
-            background-color: #7f8c8d;
+            width: 4px;
+            background-color: #95a5a6;
             top: 0;
             bottom: 0;
             left: 50%;
-            margin-left: -3px;
+            margin-left: -2px;
             border-radius: 3px;
         }
 
@@ -172,15 +180,15 @@
         .container::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            right: -13px;
+            width: 18px;
+            height: 18px;
+            right: -11px;
             background-color: #e74c3c;
             border: 4px solid #fff;
             top: 25px;
             border-radius: 50%;
             z-index: 1;
-            box-shadow: 0 0 0 3px #e74c3c44;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25);
         }
 
         .left { left: 0; }
@@ -196,7 +204,7 @@
             right: 30px;
             border: medium solid white;
             border-width: 10px 0 10px 10px;
-            border-color: transparent transparent transparent white;
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.92);
         }
 
         .right::before {
@@ -209,28 +217,28 @@
             left: 30px;
             border: medium solid white;
             border-width: 10px 10px 10px 0;
-            border-color: transparent white transparent transparent;
+            border-color: transparent rgba(255, 255, 255, 0.92) transparent transparent;
         }
 
-        .right::after { left: -15px; }
+        .right::after { left: -11px; }
 
         /* 內容卡片 */
         .content {
             padding: 20px 30px;
-            background-color: rgba(255, 255, 255, 0.88); /* 半透明卡片，透出微弱水彩 */
+            background-color: rgba(255, 255, 255, 0.92); /* 高透光白色卡片，透出背後RGB水墨 */
             position: relative;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(8px); /* 毛玻璃讓背景更柔和 */
+            backdrop-filter: blur(6px); /* 毛玻璃讓水墨背景過渡更柔和 */
         }
 
         .content:hover { 
             transform: translateY(-5px); 
-            box-shadow: 0 8px 25px rgba(131, 56, 236, 0.12);
+            box-shadow: 0 8px 25px rgba(41, 121, 255, 0.15);
         }
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
-        .title { font-size: 1.3em; margin-bottom: 15px; }
+        .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; }
 
         /* 圖片排版樣式 */
         .image-gallery {
@@ -311,7 +319,7 @@
         /* 期末報告顯眼效果樣式 */
         .content.highlight-final {
             border: 2px solid #e74c3c;
-            background-color: rgba(255, 249, 249, 0.9);
+            background-color: rgba(255, 249, 249, 0.95);
             box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2);
             animation: pulseGlow 2.5s infinite ease-in-out;
         }
@@ -460,11 +468,18 @@
 </head>
 <body>
 
+    <svg style="position: absolute; width: 0; height: 0;">
+        <filter id="ink-disp-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
     <div class="watercolor-background">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
+        <div class="ink-blob ink-red"></div>
+        <div class="ink-blob ink-green"></div>
+        <div class="ink-blob ink-blue"></div>
+        <div class="ink-blob ink-accent"></div>
     </div>
     <div class="center-overlay"></div>
 
@@ -634,6 +649,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
 
         // 地震轉場特效
+        // 
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
