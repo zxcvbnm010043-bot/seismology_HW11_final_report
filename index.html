@@ -7,11 +7,10 @@
     <style>
         /* 全域變數定義：東方霓虹水墨 RGB 色彩與宣紙底色 */
         :root {
-            /* 調整為具備水墨通透感與霓虹張力的 RGB 三原色暈染色調 */
             --ink-rgb-red: rgba(255, 20, 100, 0.28);
             --ink-rgb-green: rgba(0, 230, 118, 0.25);
             --ink-rgb-blue: rgba(41, 121, 255, 0.28);
-            --ink-black-accent: rgba(44, 62, 80, 0.05); /* 微量焦墨點綴 */
+            --ink-black-accent: rgba(44, 62, 80, 0.05); 
         }
 
         body {
@@ -33,67 +32,72 @@
             height: 100vh;
             z-index: -2;
             overflow: hidden;
-            background: #fbfbf6; /* 帶有一點點微黃的宣紙底色 */
-            /* 模擬宣紙纖維的微小紋理感 */
+            background: #fbfbf6; /* 宣紙底色 */
             background-image: radial-gradient(rgba(0,0,0,0.02) 1.2px, transparent 0);
             background-size: 10px 10px;
         }
 
-        /* 透過 SVG 濾鏡與不規則形狀製造東方水墨之毛邊、擴散與疊加效果 */
+        /* 透過 SVG 濾鏡與不規則形狀製造東方水墨效果 */
         .ink-blob {
             position: absolute;
             border-radius: 50%;
-            /* 關鍵：透過 blur 與自訂的 svg 濾鏡產生真實的水墨邊緣撕裂與擴散感 */
             filter: url(#ink-disp-filter) blur(60px); 
-            mix-blend-mode: multiply; /* 讓 RGB 色彩重疊處像水墨般自然加深與破墨 */
+            mix-blend-mode: multiply; 
             opacity: 0.8;
             animation: inkFlow 20s infinite alternate ease-in-out;
         }
 
-        /* RGB - 紅墨 (主要分佈在左上與右中) */
-        .ink-red {
-            top: -5%;
-            left: -10%;
-            width: 650px;
-            height: 650px;
-            background: var(--ink-rgb-red);
-            animation-duration: 22s;
+        .ink-red { top: -5%; left: -10%; width: 650px; height: 650px; background: var(--ink-rgb-red); animation-duration: 22s; }
+        .ink-green { top: 15%; right: -15%; width: 550px; height: 550px; background: var(--ink-rgb-green); animation-duration: 18s; animation-delay: -3s; }
+        .ink-blue { bottom: -10%; left: 5%; width: 600px; height: 600px; background: var(--ink-rgb-blue); animation-duration: 25s; animation-delay: -6s; }
+        .ink-accent { top: 45%; right: 20%; width: 450px; height: 450px; background: var(--ink-black-accent); animation-duration: 16s; animation-delay: -1.5s; }
+
+        /* --- 新增：地震觸發時的水墨滴落與暈染容器 --- */
+        #ink-drops-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* 讓墨滴暈在卡片背後、宣紙之上 */
+            pointer-events: none;
+            overflow: hidden;
         }
 
-        /* RGB - 綠墨 (主要分佈在右上方) */
-        .ink-green {
-            top: 15%;
-            right: -15%;
-            width: 550px;
-            height: 550px;
-            background: var(--ink-rgb-green);
-            animation-duration: 18s;
-            animation-delay: -3s;
+        /* 墨滴本體樣式 */
+        .ink-drop {
+            position: absolute;
+            background: rgba(30, 40, 50, 0.85); /* 濃墨色 */
+            border-radius: 50%;
+            opacity: 0;
+            filter: url(#ink-disp-filter); /* 同樣套用宣紙暈染濾鏡 */
+            transform-origin: center;
+            mix-blend-mode: multiply;
         }
 
-        /* RGB - 藍墨 (主要分佈在左下方) */
-        .ink-blue {
-            bottom: -10%;
-            left: 5%;
-            width: 600px;
-            height: 600px;
-            background: var(--ink-blue-accent, var(--ink-rgb-blue));
-            animation-duration: 25s;
-            animation-delay: -6s;
+        /* 墨滴落下的動畫組合：下墜 -> 著地 -> 擴散變淡 */
+        @keyframes inkSplash {
+            0% {
+                transform: translateY(-150px) scaleX(0.6) scaleY(1.3);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(0) scaleX(1) scaleY(1);
+            }
+            30% {
+                /* 撞擊地面瞬間扁平化 */
+                transform: translateY(0) scaleX(1.5) scaleY(0.7);
+            }
+            100% {
+                /* 水墨隨紙張纖維迅速暈開、變大、變淡消失 */
+                transform: translateY(0) scale(4.5);
+                filter: url(#ink-disp-filter) blur(25px);
+                opacity: 0;
+            }
         }
 
-        /* 焦墨/淡墨點綴 (增加傳統水墨山水畫的層次感) */
-        .ink-accent {
-            top: 45%;
-            right: 20%;
-            width: 450px;
-            height: 450px;
-            background: var(--ink-black-accent);
-            animation-duration: 16s;
-            animation-delay: -1.5s;
-        }
-
-        /* 中央微白遮罩：確保網頁中央好閱讀，只有周圍有漂亮的 RGB 水墨暈開 */
+        /* 中央微白遮罩 */
         .center-overlay {
             position: fixed;
             top: 0;
@@ -105,7 +109,6 @@
             pointer-events: none;
         }
 
-        /* 水墨沿著紙張纖維慢速擴散與流動動畫 */
         @keyframes inkFlow {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; }
             50% { transform: translate(40px, -30px) scale(1.08) rotate(90deg); border-radius: 53% 47% 34% 66% / 50% 36% 64% 50%; }
@@ -154,7 +157,6 @@
             margin: 0 auto;
         }
 
-        /* 中央的數線（調整為帶有水墨風骨的深灰色） */
         .timeline::after {
             content: '';
             position: absolute;
@@ -167,7 +169,6 @@
             border-radius: 3px;
         }
 
-        /* 時間軸項目容器 */
         .container {
             padding: 15px 40px;
             position: relative;
@@ -176,7 +177,6 @@
             box-sizing: border-box;
         }
 
-        /* 數線上的節點 */
         .container::after {
             content: '';
             position: absolute;
@@ -225,12 +225,12 @@
         /* 內容卡片 */
         .content {
             padding: 20px 30px;
-            background-color: rgba(255, 255, 255, 0.92); /* 高透光白色卡片，透出背後RGB水墨 */
+            background-color: rgba(255, 255, 255, 0.92); 
             position: relative;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(6px); /* 毛玻璃讓水墨背景過渡更柔和 */
+            backdrop-filter: blur(6px); 
         }
 
         .content:hover { 
@@ -261,7 +261,7 @@
             transform: scale(1.02);
         }
 
-        /* 原生燈箱放大效果樣式 */
+        /* 燈箱樣式 */
         .lightbox-overlay {
             position: fixed;
             top: 0;
@@ -277,159 +277,37 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        .lightbox-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .lightbox-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 6px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        .lightbox-overlay.active img {
-            transform: scale(1);
-        }
+        .lightbox-overlay.active { opacity: 1; pointer-events: auto; }
+        .lightbox-overlay img { max-width: 90%; max-height: 90%; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
+        .lightbox-overlay.active img { transform: scale(1); }
 
-        /* --- PDF 內嵌預覽樣式 --- */
-        .pdf-viewer {
-            margin-top: 15px;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            background-color: #f9f9f9;
-        }
-        .pdf-title-bar {
-            background-color: #34495e;
-            color: white;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-        .pdf-viewer iframe {
-            width: 100%;
-            height: 350px;
-            border: none;
-            display: block;
-        }
+        /* PDF 預覽 */
+        .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
+        .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
+        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
 
-        /* 期末報告顯眼效果樣式 */
-        .content.highlight-final {
-            border: 2px solid #e74c3c;
-            background-color: rgba(255, 249, 249, 0.95);
-            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2);
-            animation: pulseGlow 2.5s infinite ease-in-out;
-        }
-        
-        .final-badge {
-            background-color: #e74c3c;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: bold;
-            margin-left: 8px;
-            vertical-align: middle;
-            display: inline-block;
-            animation: blinkEffect 1.5s infinite;
-        }
+        /* 期末報告特效 */
+        .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
+        .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
 
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); }
-            50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); }
-        }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); } 50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); } }
+        @keyframes blinkEffect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-        @keyframes blinkEffect {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* 特效按鈕群組 */
-        .link-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        /* 特效按鈕 */
-        .quake-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #34495e;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background 0.3s;
-            cursor: pointer;
-            text-align: center;
-        }
-
+        .link-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
         .quake-link:hover { background-color: #e74c3c; }
 
-        /* --- 斷層轉場特效區塊 --- */
-        #quake-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            display: flex;
-            opacity: 0;
-        }
+        /* --- 斷層轉場特效 --- */
+        #quake-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; display: flex; opacity: 0; }
+        #quake-overlay.active { opacity: 1; }
+        .crust { position: absolute; width: 100%; height: 100%; background: #1a1a1a; background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
+        .crust.left { clip-path: polygon(0 0, 50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 0 100%); }
+        .crust.right { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 53% 80%, 47% 60%, 52% 40%, 48% 20%); }
+        .crack-line { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 15px; height: 100%; background: #ff4700; clip-path: polygon(50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 48% 100%, 51% 80%, 45% 60%, 50% 40%, 46% 20%, 48% 0); opacity: 0; box-shadow: 0 0 30px 10px #ff4700; }
 
-        #quake-overlay.active {
-            opacity: 1;
-        }
-
-        .crust {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #1a1a1a;
-            background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-        }
-
-        .crust.left {
-            clip-path: polygon(0 0, 50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 0 100%);
-        }
-        .crust.right {
-            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 53% 80%, 47% 60%, 52% 40%, 48% 20%);
-        }
-
-        .crack-line {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 15px;
-            height: 100%;
-            background: #ff4700;
-            clip-path: polygon(50% 0, 48% 20%, 52% 40%, 47% 60%, 53% 80%, 50% 100%, 48% 100%, 51% 80%, 45% 60%, 50% 40%, 46% 20%, 48% 0);
-            opacity: 0;
-            box-shadow: 0 0 30px 10px #ff4700;
-        }
-
-        #quake-overlay.active .crack-line {
-            animation: crackFlash 0.3s ease-in forwards;
-        }
-
-        #quake-overlay.active .crust.left {
-            animation: faultLeft 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-            animation-delay: 0.3s;
-        }
-        #quake-overlay.active .crust.right {
-            animation: faultRight 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-            animation-delay: 0.3s;
-        }
+        #quake-overlay.active .crack-line { animation: crackFlash 0.3s ease-in forwards; }
+        #quake-overlay.active .crust.left { animation: faultLeft 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
+        #quake-overlay.active .crust.right { animation: faultRight 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
 
         /* 左右震動效果 */
         @keyframes shake {
@@ -439,20 +317,9 @@
         }
         .shake-active { animation: shake 0.4s ease-in-out infinite; }
 
-        @keyframes crackFlash {
-            0% { opacity: 0; height: 0%; }
-            100% { opacity: 1; height: 100%; }
-        }
-
-        @keyframes faultLeft {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-50vw, 10vh); opacity: 0; }
-        }
-
-        @keyframes faultRight {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50vw, -10vh); opacity: 0; }
-        }
+        @keyframes crackFlash { 0% { opacity: 0; height: 0%; } 100% { opacity: 1; height: 100%; } }
+        @keyframes faultLeft { 0% { transform: translate(0, 0); } 100% { transform: translate(-50vw, 10vh); opacity: 0; } }
+        @keyframes faultRight { 0% { transform: translate(0, 0); } 100% { transform: translate(50vw, -10vh); opacity: 0; } }
 
         /* RWD */
         @media screen and (max-width: 600px) {
@@ -481,6 +348,9 @@
         <div class="ink-blob ink-blue"></div>
         <div class="ink-blob ink-accent"></div>
     </div>
+    
+    <div id="ink-drops-container"></div>
+    
     <div class="center-overlay"></div>
 
     <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home">
@@ -524,7 +394,6 @@
                     <div class="pdf-title-bar">🤖 AI 演講成果</div>
                     <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
                 </div>
-
             </div>
         </div>
 
@@ -560,7 +429,6 @@
                     <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
                     <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
                 </div>
-
             </div>
         </div>
 
@@ -647,15 +515,57 @@
         const overlay = document.getElementById('quake-overlay');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
+        const dropsContainer = document.getElementById('ink-drops-container');
 
-        // 地震轉場特效
-        // 
+        // 新增：生成隨機滴落水墨的函式
+        function createInkDrops() {
+            // 每次震動隨機產生 5 到 8 顆落墨
+            const dropCount = Math.floor(Math.random() * 4) + 5; 
+            
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('ink-drop');
+                
+                // 隨機尺寸 (15px ~ 45px)
+                const size = Math.floor(Math.random() * 30) + 15;
+                // 隨機視窗水平分佈 (5% ~ 95%)
+                const leftPos = Math.floor(Math.random() * 90) + 5;
+                // 隨機視窗垂直著陸點 (20% ~ 80%)
+                const topPos = Math.floor(Math.random() * 60) + 20;
+                // 隨機微調動畫延遲，製造先後落下的錯落感 (0s ~ 0.3s)
+                const delay = Math.random() * 0.3;
+
+                drop.style.width = `${size}px`;
+                drop.style.height = `${size}px`;
+                drop.style.left = `${leftPos}vw`;
+                drop.style.top = `${topPos}vh`;
+                
+                // 綁定動態水墨下墜與擴散動畫
+                drop.style.animation = `inkSplash 0.9s cubic-bezier(0.4, 0.01, 0.165, 0.99) ${delay}s forwards`;
+                
+                dropsContainer.appendChild(drop);
+
+                // 動態完結後將 DOM 移除，避免耗費記憶體
+                setTimeout(() => {
+                    drop.remove();
+                }, 1300);
+            }
+        }
+
+        // 地震轉場特效 (整合水墨滴落)
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
+            // 1. 觸發網頁左右劇烈搖晃
             document.body.classList.add('shake-active');
+            
+            // 2. 瞬間在宣紙背景層滴落並暈開水墨
+            createInkDrops();
+            
+            // 3. 啟動裂地斷層轉場
             overlay.classList.add('active');
 
+            // 1 秒後正式跳轉
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000);
@@ -668,6 +578,7 @@
         }
 
         function closeLightbox() {
+            lightbox.classList.remove('remove'); // 修正原本的小 typo
             lightbox.classList.remove('active');
             setTimeout(() => {
                 lightboxImg.src = ""; 
