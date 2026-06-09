@@ -5,20 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地震學期末報告時間軸</title>
     <style>
+        /* 全域變數定義霓虹水彩色彩 */
+        :root {
+            --color-neon-purple: rgba(131, 56, 236, 0.25);
+            --color-neon-pink: rgba(255, 0, 127, 0.22);
+            --color-neon-cyan: rgba(0, 245, 212, 0.25);
+            --color-neon-yellow: rgba(255, 190, 11, 0.18);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* 水彩霓虹渲染背景：多重輕透漸層疊加，中央保持偏白，周圍透出霓虹渲染感 */
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(131, 56, 236, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 10%, rgba(255, 0, 127, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 30% 80%, rgba(255, 190, 11, 0.05) 0%, transparent 40%),
-                linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(244, 244, 249, 0.95));
-            background-attachment: fixed;
+            background-color: #f6f6fb;
             color: #333;
             margin: 0;
             padding: 40px 0;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- 高級水彩霓虹渲染特效背景層 --- */
+        .watercolor-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            background: #fbfbfd;
+            /* 模擬水彩紙的微小紋理感 */
+            background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 0);
+            background-size: 8px 8px;
+        }
+
+        /* 透過模糊濾鏡與不規則形狀製造真正的水彩暈染與疊加效果 */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* 大範圍模糊達到暈染 */
+            mix-blend-mode: multiply; /* 讓色彩重疊處像水彩般加深 */
+            opacity: 0.75;
+            animation: floatMove 12s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: var(--color-neon-purple);
+            animation-duration: 16s;
+        }
+
+        .blob-2 {
+            top: 10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--color-neon-pink);
+            animation-duration: 14s;
+            animation-delay: -2s;
+        }
+
+        .blob-3 {
+            bottom: -10%;
+            left: 15%;
+            width: 550px;
+            height: 550px;
+            background: var(--color-neon-cyan);
+            animation-duration: 18s;
+            animation-delay: -4s;
+        }
+
+        .blob-4 {
+            top: 40%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: var(--color-neon-yellow);
+            animation-duration: 12s;
+            animation-delay: -1s;
+        }
+
+        /* 中央微白遮罩：確保網頁中央好閱讀，只有周圍有漂亮的霓虹水彩暈開 */
+        .center-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* 水彩區塊慢速漂浮動畫，增加畫面靈動感 */
+        @keyframes floatMove {
+            0% { transform: translate(0, 0) scale(1); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            100% { transform: translate(60px, 40px) scale(1.1); border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%; }
         }
 
         h1 {
@@ -133,17 +217,17 @@
         /* 內容卡片 */
         .content {
             padding: 20px 30px;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.88); /* 半透明卡片，透出微弱水彩 */
             position: relative;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px); /* 毛玻璃讓背景更柔和 */
         }
 
         .content:hover { 
             transform: translateY(-5px); 
-            box-shadow: 0 8px 25px rgba(131, 56, 236, 0.15);
+            box-shadow: 0 8px 25px rgba(131, 56, 236, 0.12);
         }
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; }
@@ -162,7 +246,7 @@
             border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             transition: transform 0.2s;
-            cursor: pointer; /* 讓使用者知道圖片可以點擊 */
+            cursor: pointer;
         }
         
         .image-gallery img:hover {
@@ -227,8 +311,8 @@
         /* 期末報告顯眼效果樣式 */
         .content.highlight-final {
             border: 2px solid #e74c3c;
-            background-color: #fff9f9;
-            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.25);
+            background-color: rgba(255, 249, 249, 0.9);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2);
             animation: pulseGlow 2.5s infinite ease-in-out;
         }
         
@@ -246,8 +330,8 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.2); transform: scale(1); }
-            50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.5); transform: scale(1.02); }
+            0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); }
+            50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); }
         }
 
         @keyframes blinkEffect {
@@ -375,6 +459,14 @@
     </style>
 </head>
 <body>
+
+    <div class="watercolor-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+    </div>
+    <div class="center-overlay"></div>
 
     <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home">
         <span>🏠</span> 返回首頁
@@ -562,7 +654,7 @@
         function closeLightbox() {
             lightbox.classList.remove('active');
             setTimeout(() => {
-                lightboxImg.src = ""; // 關閉後清空圖源，優化記憶體
+                lightboxImg.src = ""; 
             }, 300);
         }
     </script>
