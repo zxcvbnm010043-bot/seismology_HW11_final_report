@@ -21,29 +21,21 @@
             padding: 40px 0;
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s;
         }
 
         /* --- 高級東方水墨 RGB 渲染特效背景層 --- */
         .watercolor-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-            overflow: hidden;
-            background: #fbfbf6; /* 宣紙底色 */
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; overflow: hidden; background: #fbfbf6; /* 宣紙底色 */
             background-image: radial-gradient(rgba(0,0,0,0.02) 1.2px, transparent 0);
             background-size: 10px 10px;
+            transition: opacity 0.5s;
         }
 
         .ink-blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: url(#ink-disp-filter) blur(60px); 
-            mix-blend-mode: multiply; 
-            opacity: 0.8;
-            animation: inkFlow 20s infinite alternate ease-in-out;
+            position: absolute; border-radius: 50%; filter: url(#ink-disp-filter) blur(60px); 
+            mix-blend-mode: multiply; opacity: 0.8; animation: inkFlow 20s infinite alternate ease-in-out;
         }
 
         .ink-red { top: -5%; left: -10%; width: 650px; height: 650px; background: var(--ink-rgb-red); animation-duration: 22s; }
@@ -53,43 +45,28 @@
 
         /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
         #ink-drops-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9998; 
-            pointer-events: none;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 9998; pointer-events: none; overflow: hidden;
         }
 
         .ink-drop {
-            position: absolute;
-            background: rgba(18, 24, 32, 0.95); 
-            border-radius: 50%;
-            opacity: 0;
-            filter: url(#ink-disp-filter); 
-            transform-origin: center;
-            mix-blend-mode: multiply;
+            position: absolute; background: rgba(18, 24, 32, 0.95); border-radius: 50%;
+            opacity: 0; filter: url(#ink-disp-filter); transform-origin: center; mix-blend-mode: multiply;
         }
 
+        /* 滴落水墨動畫 */
         @keyframes inkSplashRevised {
             0% { transform: translateY(0) scaleX(0.4) scaleY(1.8); opacity: 0; }
             10% { opacity: 1; }
             18% { transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1); filter: url(#ink-disp-filter) blur(0px); opacity: 1; }
             25% { transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4); filter: url(#ink-disp-filter) blur(1px); opacity: 1; }
-            100% { transform: translateY(var(--fall-distance)) scale(35); filter: url(#ink-disp-filter) blur(45px); opacity: 0.95; }
+            100% { transform: translateY(var(--fall-distance)) scale(35); filter: url(#ink-disp-filter) blur(45px); opacity: 0; }
         }
 
         .center-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             background: radial-gradient(circle at center, rgba(251, 251, 246, 0.8) 0%, rgba(251, 251, 246, 0.15) 100%);
-            pointer-events: none;
+            pointer-events: none; transition: opacity 0.5s;
         }
 
         @keyframes inkFlow {
@@ -99,39 +76,18 @@
         }
 
         h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 50px;
-            font-size: 2.5em;
-            letter-spacing: 4px;
-            font-weight: 700;
-            text-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+            text-align: center; color: #2c3e50; margin-bottom: 50px; font-size: 2.5em;
+            letter-spacing: 4px; font-weight: 700; text-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
         }
 
-        /* 返回首頁按鈕 */
         .back-to-home {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background-color: #2c3e50;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
+            position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; align-items: center;
+            gap: 8px; padding: 12px 20px; background-color: #2c3e50; color: #ffffff;
+            text-decoration: none; font-weight: bold; border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: all 0.3s ease;
         }
 
-        .back-to-home:hover {
-            background-color: #e74c3c;
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
-        }
+        .back-to-home:hover { background-color: #e74c3c; transform: scale(1.05); box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4); }
 
         /* 時間軸主體 */
         .timeline { position: relative; max-width: 900px; margin: 0 auto; }
@@ -160,10 +116,22 @@
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; }
 
-        /* 圖片排版樣式 */
+        /* 圖片與 PDF 排版 */
         .image-gallery { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
         .image-gallery img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; }
         .image-gallery img:hover { transform: scale(1.02); }
+        .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
+        .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
+        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
+        
+        .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
+        .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); } 50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); } }
+        @keyframes blinkEffect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        .link-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
+        .quake-link:hover { background-color: #e74c3c; }
 
         /* 燈箱樣式 */
         .lightbox-overlay {
@@ -175,61 +143,36 @@
         .lightbox-overlay img { max-width: 90%; max-height: 90%; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
         .lightbox-overlay.active img { transform: scale(1); }
 
-        /* PDF 預覽 */
-        .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
-        .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
-        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
-
-        /* 期末報告特效 */
-        .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
-        .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); } 50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); } }
-        @keyframes blinkEffect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-        .link-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
-        .quake-link:hover { background-color: #e74c3c; }
-
-        /* --- 斷層裂開轉場特效 --- */
+        /* --- 地震網頁撕裂與發光裂痕特效 --- */
         #quake-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            pointer-events: none; 
-            z-index: 9999; 
-            display: flex; 
-            opacity: 0; 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 9999; display: flex; opacity: 0; 
         }
         #quake-overlay.active { opacity: 1; }
-        .crust { 
-            position: absolute; top: -10vh; width: 50vw; height: 120vh; background: #1a1a1a; 
-            background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%); 
-            background-size: 20px 20px; background-position: 0 0, 10px 10px; 
-        }
-        .crust.left { left: 0; clip-path: polygon(0 0, 100% 0, 96% 20%, 104% 40%, 94% 60%, 106% 80%, 100% 100%, 0 100%); }
-        .crust.right { right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 6% 80%, -4% 60%, 4% 40%, -4% 20%); }
         
         .crack-line { 
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 16px; height: 100%; 
-            background: #ff4700; clip-path: polygon(50% 0, 18% 20%, 82% 40%, 2% 60%, 98% 80%, 50% 100%, 30% 100%, 78% 80%, -18% 60%, 62% 40%, -2% 20%, 30% 0); 
-            opacity: 0; box-shadow: 0 0 35px 15px #ff4700; z-index: 10;
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleY(0); 
+            transform-origin: top; width: 12px; height: 100vh; background: #ff4700; 
+            clip-path: polygon(50% 0, 18% 10%, 82% 20%, 2% 30%, 98% 40%, 50% 50%, 18% 60%, 82% 70%, 2% 80%, 98% 90%, 50% 100%, 30% 100%, 78% 90%, -18% 80%, 62% 70%, -2% 60%, 30% 50%, -18% 40%, 62% 30%, -2% 20%, 30% 10%); 
+            opacity: 0; box-shadow: 0 0 45px 20px #ff4700; z-index: 10000;
         }
 
-        #quake-overlay.active .crack-line { animation: crackFlash 0.3s ease-in forwards; }
-        #quake-overlay.active .crust.left { animation: faultLeftNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
-        #quake-overlay.active .crust.right { animation: faultRightNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
+        #quake-overlay.active .crack-line { animation: crackFlash 1s ease-out forwards; }
+
+        @keyframes crackFlash {
+            0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
+            15% { opacity: 1; transform: translateX(-50%) scaleY(1); }
+            100% { opacity: 0; transform: translateX(-50%) scaleY(1); filter: blur(10px); }
+        }
 
         /* 網頁震動動畫 */
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-12px); }
-            20%, 40%, 60%, 80% { transform: translateX(12px); }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-15px, 5px) rotate(-1deg); }
+            20%, 40%, 60%, 80% { transform: translate(15px, -5px) rotate(1deg); }
         }
-        .shake-active { animation: shake 0.4s ease-in-out infinite; }
+        .shake-active { animation: shake 0.35s ease-in-out infinite; overflow: hidden; }
 
-        /* RWD 行動裝置排版優化 */
         @media screen and (max-width: 600px) {
             .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
             .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
@@ -256,13 +199,11 @@
         <div class="ink-blob ink-blue"></div>
         <div class="ink-blob ink-accent"></div>
     </div>
+    <div class="center-overlay"></div>
     
     <div id="ink-drops-container"></div>
-    <div class="center-overlay"></div>
 
     <div id="quake-overlay">
-        <div class="crust left"></div>
-        <div class="crust right"></div>
         <div class="crack-line"></div>
     </div>
 
@@ -419,59 +360,136 @@
             </div>
         </div>
     </div> <script>
-        const overlay = document.getElementById('quake-overlay');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
-        const mainWrapper = document.getElementById('main-wrapper'); // 取得新的內容外框
+        const mainWrapper = document.getElementById('main-wrapper');
 
-        // 水墨濺灑邏輯
+        // 水墨滴落邏輯：在畫面上方隨機生成並滴下
         function createInkDrops() {
-            const dropCount = Math.floor(Math.random() * 3) + 7; 
+            const dropCount = Math.floor(Math.random() * 5) + 10; // 生成 10-14 滴水墨
             
             for (let i = 0; i < dropCount; i++) {
                 const drop = document.createElement('div');
                 drop.classList.add('ink-drop');
                 
-                const size = Math.floor(Math.random() * 35) + 35; 
-                const leftPos = Math.floor(Math.random() * 85) + 7; 
+                const size = Math.floor(Math.random() * 40) + 40; 
+                const leftPos = Math.floor(Math.random() * 100); 
                 
                 drop.style.width = `${size}px`;
                 drop.style.height = `${size}px`;
                 drop.style.left = `${leftPos}vw`;
                 drop.style.top = `-100px`; 
                 
-                const targetVh = Math.floor(Math.random() * 65) + 15; 
+                const targetVh = Math.floor(Math.random() * 80) + 20; 
                 const windowHeight = window.innerHeight;
                 const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
                 
                 drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
 
-                const delay = Math.random() * 0.18;
-                drop.style.animation = `inkSplashRevised 1.0s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
+                const delay = Math.random() * 0.3;
+                drop.style.animation = `inkSplashRevised 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
                 
                 dropsContainer.appendChild(drop);
 
-                setTimeout(() => { drop.remove(); }, 1400);
+                // 動畫結束後移除 DOM 節點
+                setTimeout(() => { drop.remove(); }, 1600);
             }
         }
 
-        // 觸發地震轉場特效
+        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
-            // 3. 【修復關鍵】：改搖晃 main-wrapper 而不是 body
-            mainWrapper.classList.add('shake-active');
+            // 1. 全畫面開始劇烈搖晃
+            document.body.classList.add('shake-active');
+            
+            // 2. 觸發水墨從頂端滴落
             createInkDrops();
             
-            overlay.classList.add('active');
-
+            // 設定搖晃 0.6 秒後觸發網頁撕裂特效
             setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 1250);
+                document.body.classList.remove('shake-active');
+                
+                const rect = mainWrapper.getBoundingClientRect();
+                
+                // 為了讓複本看起來是實心的（擋住後面的黑畫面），賦予底色
+                mainWrapper.style.backgroundColor = '#fbfbf6'; 
+                
+                // --- 製作左半邊網頁複本 ---
+                const leftClone = mainWrapper.cloneNode(true);
+                leftClone.id = ''; // 清除 ID 避免衝突
+                // 移除 iframe 以防止複製時重新載入造成卡頓
+                leftClone.querySelectorAll('iframe').forEach(iframe => {
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
+                    iframe.parentNode.replaceChild(placeholder, iframe);
+                });
+                leftClone.style.position = 'fixed';
+                leftClone.style.top = rect.top + 'px';
+                leftClone.style.left = rect.left + 'px';
+                leftClone.style.width = rect.width + 'px';
+                leftClone.style.height = rect.height + 'px';
+                leftClone.style.zIndex = '9998';
+                leftClone.style.pointerEvents = 'none';
+                // 利用多邊形裁切出「左半邊」鋸齒狀
+                leftClone.style.clipPath = 'polygon(0 0, 50% 0, 48% 10%, 52% 20%, 48% 30%, 52% 40%, 48% 50%, 52% 60%, 48% 70%, 52% 80%, 48% 90%, 50% 100%, 0 100%)';
+                leftClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
+                
+                // --- 製作右半邊網頁複本 ---
+                const rightClone = mainWrapper.cloneNode(true);
+                rightClone.id = '';
+                rightClone.querySelectorAll('iframe').forEach(iframe => {
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
+                    iframe.parentNode.replaceChild(placeholder, iframe);
+                });
+                rightClone.style.position = 'fixed';
+                rightClone.style.top = rect.top + 'px';
+                rightClone.style.left = rect.left + 'px';
+                rightClone.style.width = rect.width + 'px';
+                rightClone.style.height = rect.height + 'px';
+                rightClone.style.zIndex = '9998';
+                rightClone.style.pointerEvents = 'none';
+                // 利用多邊形裁切出「右半邊」鋸齒狀
+                rightClone.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 48% 90%, 52% 80%, 48% 70%, 52% 60%, 48% 50%, 52% 40%, 48% 30%, 52% 20%, 48% 10%)';
+                rightClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
+                
+                // 將兩半網頁加入畫面
+                document.body.appendChild(leftClone);
+                document.body.appendChild(rightClone);
+                
+                // 隱藏原始網頁與背景，讓網頁底部變成黑洞深淵
+                mainWrapper.style.opacity = '0';
+                document.querySelector('.watercolor-background').style.opacity = '0';
+                document.querySelector('.center-overlay').style.opacity = '0';
+                document.body.style.backgroundColor = '#050505';
+                
+                // 觸發中央發光裂痕動畫
+                document.getElementById('quake-overlay').classList.add('active');
+                
+                // 確保 CSS 渲染完畢後，執行撕裂位移動畫
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        // 左半邊向左下方傾斜滑出
+                        leftClone.style.transform = 'translate(-35vw, 8vh) rotate(-4deg)';
+                        leftClone.style.opacity = '0';
+                        
+                        // 右半邊向右上方傾斜滑出
+                        rightClone.style.transform = 'translate(35vw, -8vh) rotate(4deg)';
+                        rightClone.style.opacity = '0';
+                    });
+                });
+
+                // 動畫演出完畢 (1秒) 後跳轉網頁
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 1000);
+                
+            }, 600); // 搖晃 0.6 秒
         }
 
-        // 燈箱控制
+        // 圖片燈箱控制
         function openLightbox(src) {
             lightboxImg.src = src;
             lightbox.classList.add('active');
