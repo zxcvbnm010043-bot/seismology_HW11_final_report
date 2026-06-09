@@ -53,7 +53,7 @@
 
         /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
         #ink-drops-container {
-            position: fixed; /* 改為 fixed，鎖定在當前瀏覽器視窗 */
+            position: fixed; /* 鎖定在當前瀏覽器視窗 */
             top: 0;
             left: 0;
             width: 100vw;
@@ -299,7 +299,7 @@
 
         /* --- 【全網頁跟隨校正】斷層裂開轉場特效 --- */
         #quake-overlay { 
-            position: fixed; /* 改為 fixed，強行鎖定在當前瀏覽視窗 */
+            position: fixed; /* 強行鎖定在當前瀏覽視窗 */
             top: 0; 
             left: 0; 
             width: 100vw; 
@@ -351,7 +351,7 @@
         #quake-overlay.active .crust.left { animation: faultLeftNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
         #quake-overlay.active .crust.right { animation: faultRightNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
 
-        /* 網頁整體左右劇烈搖晃 (加強感官震度) */
+        /* 網頁整體左右劇烈搖晃 */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-12px); }
@@ -363,7 +363,7 @@
         @keyframes faultLeftNew { 0% { transform: translate(0, 0); } 100% { transform: translate(-115%, 8vh); opacity: 0; } }
         @keyframes faultRightNew { 0% { transform: translate(0, 0); } 100% { transform: translate(115%, -8vh); opacity: 0; } }
 
-        /* RWD */
+        /* RWD 行動裝置排版優化 */
         @media screen and (max-width: 600px) {
             .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
             .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
@@ -392,10 +392,9 @@
     </div>
     
     <div id="ink-drops-container"></div>
-    
     <div class="center-overlay"></div>
 
-    <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home">
+    <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home" onclick="triggerQuake(event, this.href)">
         <span>🏠</span> 返回首頁
     </a>
 
@@ -559,7 +558,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
 
-        // 全畫面潑墨擴散
+        // 全畫面潑墨擴散動畫生成
         function createInkDrops() {
             const dropCount = Math.floor(Math.random() * 3) + 7; 
             
@@ -573,9 +572,7 @@
                 drop.style.width = `${size}px`;
                 drop.style.height = `${size}px`;
                 drop.style.left = `${leftPos}vw`;
-                
-                // 修正：高空墜落起點固定在當前視窗頂端外（-100px）
-                drop.style.top = `-100px`; 
+                drop.style.top = `-100px`; /* 固定於視窗頂端外起始墜落 */
                 
                 const targetVh = Math.floor(Math.random() * 65) + 15; 
                 const windowHeight = window.innerHeight;
@@ -594,33 +591,30 @@
             }
         }
 
-        // 地震斷層轉場特效（完美視窗鎖定、全網頁通行版）
+        // 地震斷層轉場特效觸發器
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
-            // 【關鍵修正】取得當下的網頁捲動高度，確保特效完全對齊使用者眼睛看到的畫面
-            const currentScrollY = window.scrollY;
-            
-            // 將特效容器定死在當前視窗位置
+            // 將特效遮罩與潑墨容器定死在瀏覽器當前可視範圍
             overlay.style.top = `0px`;
             dropsContainer.style.top = `0px`;
             
-            // 1. 網頁劇烈震動
+            // 1. 網頁開始劇烈搖晃
             document.body.classList.add('shake-active');
             
-            // 2. 激發全面侵蝕的潑墨
+            // 2. 觸發背景高空濺墨
             createInkDrops();
             
-            // 3. 完美對齊的斷層轉場啟動
+            // 3. 顯示並執行板塊構造斷層裂開轉場
             overlay.classList.add('active');
 
-            // 4. 控制於 1.25 秒後跳轉
+            // 4. 動畫演出完畢（1.25秒）後進行網頁跳轉
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1250);
         }
 
-        // Lightbox 功能
+        // 圖片放大 Lightbox 點擊功能
         function openLightbox(src) {
             lightboxImg.src = src;
             lightbox.classList.add('active');
