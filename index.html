@@ -37,7 +37,6 @@
             background-size: 10px 10px;
         }
 
-        /* 透過 SVG 濾鏡與不規則形狀製造東方水墨效果 */
         .ink-blob {
             position: absolute;
             border-radius: 50%;
@@ -52,19 +51,18 @@
         .ink-blue { bottom: -10%; left: 5%; width: 600px; height: 600px; background: var(--ink-rgb-blue); animation-duration: 25s; animation-delay: -6s; }
         .ink-accent { top: 45%; right: 20%; width: 450px; height: 450px; background: var(--ink-black-accent); animation-duration: 16s; animation-delay: -1.5s; }
 
-        /* --- 【重磅加強】水墨巨量暈染全畫面容器 --- */
+        /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
         #ink-drops-container {
-            position: fixed;
+            position: fixed; /* 改為 fixed，鎖定在當前瀏覽器視窗 */
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9998; /* 提升至卡片與時間軸之上，跳轉前能遮蔽、暈染整個畫面 */
+            z-index: 9998; 
             pointer-events: none;
             overflow: hidden;
         }
 
-        /* 墨滴本體：加深顏色，讓多色重疊時呈現近乎黑色的濃墨韻味 */
         .ink-drop {
             position: absolute;
             background: rgba(18, 24, 32, 0.95); 
@@ -75,36 +73,31 @@
             mix-blend-mode: multiply;
         }
 
-        /* 【全新改版動畫】極致擴散動效：放大 35 倍吞噬全畫面 */
         @keyframes inkSplashRevised {
             0% {
                 transform: translateY(0) scaleX(0.4) scaleY(1.8);
                 opacity: 0;
             }
             10% {
-                opacity: 1; /* 高空高速下墜現形 */
+                opacity: 1;
             }
             18% {
-                /* 砸中落點 */
                 transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1);
                 filter: url(#ink-disp-filter) blur(0px);
                 opacity: 1;
             }
             25% {
-                /* 猛烈撞擊地面：瞬間往左右極度攤平 */
                 transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4);
                 filter: url(#ink-disp-filter) blur(1px);
                 opacity: 1;
             }
             100% {
-                /* 瘋狂擴散：放大 35 倍，搭配深度模糊，墨汁如潮水般暈染、覆蓋整個網頁 */
                 transform: translateY(var(--fall-distance)) scale(35);
                 filter: url(#ink-disp-filter) blur(45px);
-                opacity: 0.95; /* 保持高飽和度直到網頁切換 */
+                opacity: 0.95; 
             }
         }
 
-        /* 中央微白遮罩 */
         .center-overlay {
             position: fixed;
             top: 0;
@@ -304,21 +297,20 @@
         .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
         .quake-link:hover { background-color: #e74c3c; }
 
-        /* --- 【精準定位更新】斷層裂開轉場特效 --- */
+        /* --- 【全網頁跟隨校正】斷層裂開轉場特效 --- */
         #quake-overlay { 
-            position: fixed; 
+            position: fixed; /* 改為 fixed，強行鎖定在當前瀏覽視窗 */
             top: 0; 
             left: 0; 
             width: 100vw; 
             height: 100vh; 
             pointer-events: none; 
-            z-index: 9999; /* 位於水墨層之上 */
+            z-index: 9999; /* 最上層 */
             display: flex; 
             opacity: 0; 
         }
         #quake-overlay.active { opacity: 1; }
         
-        /* 修正：地殼基底寬度改為 50vw，分置兩側，消除定位偏移造成的黑影漏洞 */
         .crust { 
             position: absolute; 
             top: 0;
@@ -330,18 +322,17 @@
             background-position: 0 0, 10px 10px; 
         }
         
-        /* 精準鋸齒切割：左地殼剛好切到螢幕中央 50% 處 */
+        /* 幾何絕對精準對齊：鎖死在 50% 邊界 */
         .crust.left { 
             left: 0;
             clip-path: polygon(0 0, 100% 0, 96% 20%, 104% 40%, 94% 60%, 106% 80%, 100% 100%, 0 100%); 
         }
-        /* 精準鋸齒切割：右地殼緊密貼合左地殼鋸齒 */
         .crust.right { 
             right: 0;
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 6% 80%, -4% 60%, 4% 40%, -4% 20%); 
         }
         
-        /* 斷層發光線精準置中 */
+        /* 斷層發光線幾何置中 */
         .crack-line { 
             position: absolute; 
             top: 0; 
@@ -356,26 +347,21 @@
             z-index: 10;
         }
 
-        /* 觸發轉場時的動畫效果 */
         #quake-overlay.active .crack-line { animation: crackFlash 0.3s ease-in forwards; }
-        
-        /* 修正偏移：動畫由原本的 vw 橫移改為基於各自板塊的精準百分比位移，完美對稱 */
         #quake-overlay.active .crust.left { animation: faultLeftNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
         #quake-overlay.active .crust.right { animation: faultRightNew 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; animation-delay: 0.3s; }
 
-        /* 網頁整體左右震動 */
+        /* 網頁整體左右劇烈搖晃 (加強感官震度) */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-12px); }
+            20%, 40%, 60%, 80% { transform: translateX(12px); }
         }
         .shake-active { animation: shake 0.4s ease-in-out infinite; }
 
         @keyframes crackFlash { 0% { opacity: 0; height: 0%; } 100% { opacity: 1; height: 100%; } }
-        
-        /* 全新地殼錯動軌跡：完美水平與斜角拉開，絕不留白邊或穿幫 */
-        @keyframes faultLeftNew { 0% { transform: translate(0, 0); } 100% { transform: translate(-110%, 8vh); opacity: 0; } }
-        @keyframes faultRightNew { 0% { transform: translate(0, 0); } 100% { transform: translate(110%, -8vh); opacity: 0; } }
+        @keyframes faultLeftNew { 0% { transform: translate(0, 0); } 100% { transform: translate(-115%, 8vh); opacity: 0; } }
+        @keyframes faultRightNew { 0% { transform: translate(0, 0); } 100% { transform: translate(115%, -8vh); opacity: 0; } }
 
         /* RWD */
         @media screen and (max-width: 600px) {
@@ -544,7 +530,7 @@
                 </div>
                 <div class="link-group">
                     <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
-                    <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="simpleQuake(event, this.href)">CH4 報告 (Overleaf)</a>
+                    <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
                 </div>
             </div>
         </div>
@@ -573,47 +559,51 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
 
-        // 全畫面潑墨擴散函式
+        // 全畫面潑墨擴散
         function createInkDrops() {
-            const dropCount = Math.floor(Math.random() * 3) + 7; // 隨機生成 7~9 顆巨型墨滴
+            const dropCount = Math.floor(Math.random() * 3) + 7; 
             
             for (let i = 0; i < dropCount; i++) {
                 const drop = document.createElement('div');
                 drop.classList.add('ink-drop');
                 
-                // 加大墨滴的初始隨機半徑，擴散後才能完美覆蓋全螢幕
-                const size = Math.floor(Math.random() * 35) + 35; // 35px ~ 70px
-                const leftPos = Math.floor(Math.random() * 85) + 7; // 水平分佈
+                const size = Math.floor(Math.random() * 35) + 35; 
+                const leftPos = Math.floor(Math.random() * 85) + 7; 
                 
                 drop.style.width = `${size}px`;
                 drop.style.height = `${size}px`;
                 drop.style.left = `${leftPos}vw`;
-                drop.style.top = `-100px`; // 依然從螢幕最上方高空降落
                 
-                // 動態著陸高度百分比 (視窗的 15% 到 80% 高度)
+                // 修正：高空墜落起點固定在當前視窗頂端外（-100px）
+                drop.style.top = `-100px`; 
+                
                 const targetVh = Math.floor(Math.random() * 65) + 15; 
                 const windowHeight = window.innerHeight;
                 const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
                 
                 drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
 
-                // 稍微縮短交錯延遲，讓水墨爆發更密集
                 const delay = Math.random() * 0.18;
-                
                 drop.style.animation = `inkSplashRevised 1.0s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
                 
                 dropsContainer.appendChild(drop);
 
-                // 完畢後清理
                 setTimeout(() => {
                     drop.remove();
                 }, 1400);
             }
         }
 
-        // 地震斷層轉場特效 (整合巨量全畫面水墨)
+        // 地震斷層轉場特效（完美視窗鎖定、全網頁通行版）
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
+            
+            // 【關鍵修正】取得當下的網頁捲動高度，確保特效完全對齊使用者眼睛看到的畫面
+            const currentScrollY = window.scrollY;
+            
+            // 將特效容器定死在當前視窗位置
+            overlay.style.top = `0px`;
+            dropsContainer.style.top = `0px`;
             
             // 1. 網頁劇烈震動
             document.body.classList.add('shake-active');
@@ -621,16 +611,16 @@
             // 2. 激發全面侵蝕的潑墨
             createInkDrops();
             
-            // 3. 完美位置調整的斷層轉場
+            // 3. 完美對齊的斷層轉場啟動
             overlay.classList.add('active');
 
-            // 4. 精準控制於 1.25 秒後跳轉，將張力留到最後一刻
+            // 4. 控制於 1.25 秒後跳轉
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1250);
         }
 
-        // Lightbox 圖片放大功能
+        // Lightbox 功能
         function openLightbox(src) {
             lightboxImg.src = src;
             lightbox.classList.add('active');
