@@ -53,7 +53,7 @@
 
         /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
         #ink-drops-container {
-            position: fixed; /* 鎖定在當前瀏覽器視窗 */
+            position: fixed; /* 絕對鎖定在視窗，解決捲動錯位 */
             top: 0;
             left: 0;
             width: 100vw;
@@ -74,28 +74,11 @@
         }
 
         @keyframes inkSplashRevised {
-            0% {
-                transform: translateY(0) scaleX(0.4) scaleY(1.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            18% {
-                transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1);
-                filter: url(#ink-disp-filter) blur(0px);
-                opacity: 1;
-            }
-            25% {
-                transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4);
-                filter: url(#ink-disp-filter) blur(1px);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(var(--fall-distance)) scale(35);
-                filter: url(#ink-disp-filter) blur(45px);
-                opacity: 0.95; 
-            }
+            0% { transform: translateY(0) scaleX(0.4) scaleY(1.8); opacity: 0; }
+            10% { opacity: 1; }
+            18% { transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1); filter: url(#ink-disp-filter) blur(0px); opacity: 1; }
+            25% { transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4); filter: url(#ink-disp-filter) blur(1px); opacity: 1; }
+            100% { transform: translateY(var(--fall-distance)) scale(35); filter: url(#ink-disp-filter) blur(45px); opacity: 0.95; }
         }
 
         .center-overlay {
@@ -241,41 +224,19 @@
         .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; }
 
         /* 圖片排版樣式 */
-        .image-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        
-        .image-gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-        
-        .image-gallery img:hover {
-            transform: scale(1.02);
-        }
+        .image-gallery { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .image-gallery img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; }
+        .image-gallery img:hover { transform: scale(1.02); }
 
         /* 燈箱樣式 */
         .lightbox-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background-color: rgba(0, 0, 0, 0.85);
             z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
         .lightbox-overlay.active { opacity: 1; pointer-events: auto; }
         .lightbox-overlay img { max-width: 90%; max-height: 90%; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
@@ -299,13 +260,13 @@
 
         /* --- 【全網頁跟隨校正】斷層裂開轉場特效 --- */
         #quake-overlay { 
-            position: fixed; /* 強行鎖定在當前瀏覽視窗 */
+            position: fixed; /* 強制鎖定當前視窗，防止捲動露白 */
             top: 0; 
             left: 0; 
             width: 100vw; 
             height: 100vh; 
             pointer-events: none; 
-            z-index: 9999; /* 最上層 */
+            z-index: 9999; 
             display: flex; 
             opacity: 0; 
         }
@@ -313,9 +274,9 @@
         
         .crust { 
             position: absolute; 
-            top: 0;
+            top: -10vh; /* 增加上下緩衝區，確保動畫拉扯時不露白 */
             width: 50vw; 
-            height: 100vh; 
+            height: 120vh; 
             background: #1a1a1a; 
             background-image: radial-gradient(#333 15%, transparent 16%), radial-gradient(#333 15%, transparent 16%); 
             background-size: 20px 20px; 
@@ -357,7 +318,7 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-12px); }
             20%, 40%, 60%, 80% { transform: translateX(12px); }
         }
-        .shake-active { animation: shake 0.4s ease-in-out infinite; }
+        .shake-active { animation: shake 0.4s ease-in-out infinite; overflow: hidden; }
 
         @keyframes crackFlash { 0% { opacity: 0; height: 0%; } 100% { opacity: 1; height: 100%; } }
         @keyframes faultLeftNew { 0% { transform: translate(0, 0); } 100% { transform: translate(-115%, 8vh); opacity: 0; } }
@@ -558,7 +519,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
 
-        // 全畫面潑墨擴散動畫生成
+        // 水墨濺灑邏輯
         function createInkDrops() {
             const dropCount = Math.floor(Math.random() * 3) + 7; 
             
@@ -572,7 +533,7 @@
                 drop.style.width = `${size}px`;
                 drop.style.height = `${size}px`;
                 drop.style.left = `${leftPos}vw`;
-                drop.style.top = `-100px`; /* 固定於視窗頂端外起始墜落 */
+                drop.style.top = `-100px`; // 保證從視窗邊界外降下
                 
                 const targetVh = Math.floor(Math.random() * 65) + 15; 
                 const windowHeight = window.innerHeight;
@@ -585,36 +546,28 @@
                 
                 dropsContainer.appendChild(drop);
 
-                setTimeout(() => {
-                    drop.remove();
-                }, 1400);
+                setTimeout(() => { drop.remove(); }, 1400);
             }
         }
 
-        // 地震斷層轉場特效觸發器
+        // 觸發地震轉場特效
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
             
-            // 將特效遮罩與潑墨容器定死在瀏覽器當前可視範圍
-            overlay.style.top = `0px`;
-            dropsContainer.style.top = `0px`;
-            
-            // 1. 網頁開始劇烈搖晃
+            // 觸發搖晃與水墨
             document.body.classList.add('shake-active');
-            
-            // 2. 觸發背景高空濺墨
             createInkDrops();
             
-            // 3. 顯示並執行板塊構造斷層裂開轉場
+            // 觸發斷層動畫（因採用 fixed 且 100vw/vh，即使捲動中依然完美對齊）
             overlay.classList.add('active');
 
-            // 4. 動畫演出完畢（1.25秒）後進行網頁跳轉
+            // 1.25秒後轉址
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1250);
         }
 
-        // 圖片放大 Lightbox 點擊功能
+        // 燈箱控制
         function openLightbox(src) {
             lightboxImg.src = src;
             lightbox.classList.add('active');
@@ -622,9 +575,7 @@
 
         function closeLightbox() {
             lightbox.classList.remove('active');
-            setTimeout(() => {
-                lightboxImg.src = ""; 
-            }, 300);
+            setTimeout(() => { lightboxImg.src = ""; }, 300);
         }
     </script>
 </body>
