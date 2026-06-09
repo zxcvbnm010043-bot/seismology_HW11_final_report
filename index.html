@@ -156,7 +156,7 @@
             transform: scale(1.02);
         }
 
-        /* --- 新增：PDF 內嵌預覽樣式 --- */
+        /* --- PDF 內嵌預覽樣式 --- */
         .pdf-viewer {
             margin-top: 15px;
             border-radius: 6px;
@@ -423,16 +423,19 @@
         <div class="container left">
             <div class="content">
                 <div class="date">05/13、05/20</div>
-                <div class="title">震源機制 + 地震學第四章</div>
-                <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">進入網站</a>
+                <div class="title">震源機制、初動解與第四章</div>
+                <div class="link-group">
+                    <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">CH4 震源機制網站</a>
+                    <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">初動解繪製震源機制</a>
+                </div>
             </div>
         </div>
 
         <div class="container right">
             <div class="content">
                 <div class="date">05/27</div>
-                <div class="title">初動解繪製震源機制</div>
-                <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">進入網站</a>
+                <div class="title">Raspberry Pi 體驗</div>
+                <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_raspberryPi/" onclick="triggerQuake(event, this.href)">進入網站</a>
             </div>
         </div>
 
@@ -474,6 +477,10 @@
             <div class="content highlight-final">
                 <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
                 <div class="title" style="font-weight: bold; color: #2c3e50;">期末報告</div>
+                <div class="link-group">
+                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report" onclick="triggerQuake(event, this.href)">📦 前往 GitHub 專案庫</a>
+                    <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report_CH4_report.pdf" onclick="triggerQuake(event, this.href)">📄 檢視 CH4 報告檔案</a>
+                </div>
             </div>
         </div>
     </div>
@@ -494,7 +501,7 @@
             document.body.classList.add('shake-active');
             overlay.classList.add('active');
 
-            // 修改為：在相同分頁直接跳轉 (支援 Hugging Face 正常開啟)
+            // 在相同分頁直接跳轉 (支援 Hugging Face 與 GitHub Pages 正常開啟)
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000);
