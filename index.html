@@ -1,557 +1,557 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地震學期末報告時間軸</title>
-    <style>
-        /* 全域變數定義：東方霓虹水墨 RGB 色彩與宣紙底色 */
-        :root {
-            --ink-rgb-red: rgba(255, 20, 100, 0.32);
-            --ink-rgb-green: rgba(0, 230, 118, 0.28);
-            --ink-rgb-blue: rgba(41, 121, 255, 0.32);
-            --ink-black-accent: rgba(44, 62, 80, 0.08); 
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學期末報告時間軸</title>
+    <style>
+        /* 全域變數定義：東方霓虹水墨 RGB 色彩與宣紙底色 */
+        :root {
+            --ink-rgb-red: rgba(255, 20, 100, 0.32);
+            --ink-rgb-green: rgba(0, 230, 118, 0.28);
+            --ink-rgb-blue: rgba(41, 121, 255, 0.32);
+            --ink-black-accent: rgba(44, 62, 80, 0.08); 
+        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f7fa;
-            color: #333;
-            margin: 0;
-            padding: 40px 0;
-            overflow-x: hidden;
-            position: relative;
-            transition: background-color 0.3s;
-        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7fa;
+            color: #333;
+            margin: 0;
+            padding: 40px 0;
+            overflow-x: hidden;
+            position: relative;
+            transition: background-color 0.3s;
+        }
 
-        /* --- 高級東方水墨 RGB 渲染特效背景層 --- */
-        .watercolor-background {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -2; overflow: hidden; background: #fbfbf6; /* 宣紙底色 */
-            background-image: radial-gradient(rgba(0,0,0,0.02) 1.2px, transparent 0);
-            background-size: 10px 10px;
-            transition: opacity 0.5s;
-        }
+        /* --- 高級東方水墨 RGB 渲染特效背景層 --- */
+        .watercolor-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; overflow: hidden; background: #fbfbf6; /* 宣紙底色 */
+            background-image: radial-gradient(rgba(0,0,0,0.02) 1.2px, transparent 0);
+            background-size: 10px 10px;
+            transition: opacity 0.5s;
+        }
 
-        .ink-blob {
-            position: absolute; border-radius: 50%; filter: url(#ink-disp-filter) blur(60px); 
-            mix-blend-mode: multiply; opacity: 0.8; animation: inkFlow 20s infinite alternate ease-in-out;
-        }
+        .ink-blob {
+            position: absolute; border-radius: 50%; filter: url(#ink-disp-filter) blur(60px); 
+            mix-blend-mode: multiply; opacity: 0.8; animation: inkFlow 20s infinite alternate ease-in-out;
+        }
 
-        .ink-red { top: -5%; left: -10%; width: 650px; height: 650px; background: var(--ink-rgb-red); animation-duration: 22s; }
-        .ink-green { top: 15%; right: -15%; width: 550px; height: 550px; background: var(--ink-rgb-green); animation-duration: 18s; animation-delay: -3s; }
-        .ink-blue { bottom: -10%; left: 5%; width: 600px; height: 600px; background: var(--ink-rgb-blue); animation-duration: 25s; animation-delay: -6s; }
-        .ink-accent { top: 45%; right: 20%; width: 450px; height: 450px; background: var(--ink-black-accent); animation-duration: 16s; animation-delay: -1.5s; }
+        .ink-red { top: -5%; left: -10%; width: 650px; height: 650px; background: var(--ink-rgb-red); animation-duration: 22s; }
+        .ink-green { top: 15%; right: -15%; width: 550px; height: 550px; background: var(--ink-rgb-green); animation-duration: 18s; animation-delay: -3s; }
+        .ink-blue { bottom: -10%; left: 5%; width: 600px; height: 600px; background: var(--ink-rgb-blue); animation-duration: 25s; animation-delay: -6s; }
+        .ink-accent { top: 45%; right: 20%; width: 450px; height: 450px; background: var(--ink-black-accent); animation-duration: 16s; animation-delay: -1.5s; }
 
-        /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
-        #ink-drops-container {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 9998; pointer-events: none; overflow: hidden;
-        }
+        /* --- 【全網頁縱深遮罩】水墨巨量暈染全畫面容器 --- */
+        #ink-drops-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 9998; pointer-events: none; overflow: hidden;
+        }
 
-        .ink-drop {
-            position: absolute; background: rgba(18, 24, 32, 0.95); border-radius: 50%;
-            opacity: 0; filter: url(#ink-disp-filter); transform-origin: center; mix-blend-mode: multiply;
-        }
+        .ink-drop {
+            position: absolute; background: rgba(18, 24, 32, 0.95); border-radius: 50%;
+            opacity: 0; filter: url(#ink-disp-filter); transform-origin: center; mix-blend-mode: multiply;
+        }
 
-        /* 滴落水墨動畫 */
-        @keyframes inkSplashRevised {
-            0% { transform: translateY(0) scaleX(0.4) scaleY(1.8); opacity: 0; }
-            10% { opacity: 1; }
-            18% { transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1); filter: url(#ink-disp-filter) blur(0px); opacity: 1; }
-            25% { transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4); filter: url(#ink-disp-filter) blur(1px); opacity: 1; }
-            100% { transform: translateY(var(--fall-distance)) scale(35); filter: url(#ink-disp-filter) blur(45px); opacity: 0; }
-        }
+        /* 滴落水墨動畫 */
+        @keyframes inkSplashRevised {
+            0% { transform: translateY(0) scaleX(0.4) scaleY(1.8); opacity: 0; }
+            10% { opacity: 1; }
+            18% { transform: translateY(var(--fall-distance)) scaleX(1) scaleY(1); filter: url(#ink-disp-filter) blur(0px); opacity: 1; }
+            25% { transform: translateY(var(--fall-distance)) scaleX(2.5) scaleY(0.4); filter: url(#ink-disp-filter) blur(1px); opacity: 1; }
+            100% { transform: translateY(var(--fall-distance)) scale(35); filter: url(#ink-disp-filter) blur(45px); opacity: 0; }
+        }
 
-        .center-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background: radial-gradient(circle at center, rgba(251, 251, 246, 0.8) 0%, rgba(251, 251, 246, 0.15) 100%);
-            pointer-events: none; transition: opacity 0.5s;
-        }
+        .center-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: radial-gradient(circle at center, rgba(251, 251, 246, 0.8) 0%, rgba(251, 251, 246, 0.15) 100%);
+            pointer-events: none; transition: opacity 0.5s;
+        }
 
-        @keyframes inkFlow {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; }
-            50% { transform: translate(40px, -30px) scale(1.08) rotate(90deg); border-radius: 53% 47% 34% 66% / 50% 36% 64% 50%; }
-            100% { transform: translate(-20px, 50px) scale(0.95) rotate(180deg); border-radius: 45% 55% 60% 40% / 33% 67% 33% 67%; }
-        }
+        @keyframes inkFlow {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; }
+            50% { transform: translate(40px, -30px) scale(1.08) rotate(90deg); border-radius: 53% 47% 34% 66% / 50% 36% 64% 50%; }
+            100% { transform: translate(-20px, 50px) scale(0.95) rotate(180deg); border-radius: 45% 55% 60% 40% / 33% 67% 33% 67%; }
+        }
 
-        h1 {
-            text-align: center; color: #2c3e50; margin-bottom: 50px; font-size: 2.5em;
-            letter-spacing: 4px; font-weight: 700; text-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
-        }
+        h1 {
+            text-align: center; color: #2c3e50; margin-bottom: 50px; font-size: 2.5em;
+            letter-spacing: 4px; font-weight: 700; text-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+        }
 
-        .back-to-home {
-            position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; align-items: center;
-            gap: 8px; padding: 12px 20px; background-color: #2c3e50; color: #ffffff;
-            text-decoration: none; font-weight: bold; border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: all 0.3s ease;
-        }
+        .back-to-home {
+            position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; align-items: center;
+            gap: 8px; padding: 12px 20px; background-color: #2c3e50; color: #ffffff;
+            text-decoration: none; font-weight: bold; border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: all 0.3s ease;
+        }
 
-        .back-to-home:hover { background-color: #e74c3c; transform: scale(1.05); box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4); }
+        .back-to-home:hover { background-color: #e74c3c; transform: scale(1.05); box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4); }
 
-        /* 時間軸主體 */
-        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
-        .timeline::after {
-            content: ''; position: absolute; width: 4px; background-color: #95a5a6;
-            top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 3px;
-        }
-        .container { padding: 15px 40px; position: relative; background-color: inherit; width: 50%; box-sizing: border-box; }
-        .container::after {
-            content: ''; position: absolute; width: 18px; height: 18px; right: -11px;
-            background-color: #e74c3c; border: 4px solid #fff; top: 25px; border-radius: 50%;
-            z-index: 1; box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25);
-        }
-        .left { left: 0; }
-        .right { left: 50%; }
-        .left::before { content: " "; height: 0; position: absolute; top: 28px; width: 0; z-index: 1; right: 30px; border: medium solid white; border-width: 10px 0 10px 10px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.92); }
-        .right::before { content: " "; height: 0; position: absolute; top: 28px; width: 0; z-index: 1; left: 30px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent rgba(255, 255, 255, 0.92) transparent transparent; }
-        .right::after { left: -11px; }
+        /* 時間軸主體 */
+        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
+        .timeline::after {
+            content: ''; position: absolute; width: 4px; background-color: #95a5a6;
+            top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 3px;
+        }
+        .container { padding: 15px 40px; position: relative; background-color: inherit; width: 50%; box-sizing: border-box; }
+        .container::after {
+            content: ''; position: absolute; width: 18px; height: 18px; right: -11px;
+            background-color: #e74c3c; border: 4px solid #fff; top: 25px; border-radius: 50%;
+            z-index: 1; box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25);
+        }
+        .left { left: 0; }
+        .right { left: 50%; }
+        .left::before { content: " "; height: 0; position: absolute; top: 28px; width: 0; z-index: 1; right: 30px; border: medium solid white; border-width: 10px 0 10px 10px; border-color: transparent transparent transparent rgba(255, 255, 255, 0.92); }
+        .right::before { content: " "; height: 0; position: absolute; top: 28px; width: 0; z-index: 1; left: 30px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent rgba(255, 255, 255, 0.92) transparent transparent; }
+        .right::after { left: -11px; }
 
-        /* 內容卡片 */
-        .content {
-            padding: 20px 30px; background-color: rgba(255, 255, 255, 0.92); position: relative;
-            border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.3s ease, box-shadow 0.3s ease; backdrop-filter: blur(6px); 
-        }
-        .content:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(41, 121, 255, 0.15); }
-        .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
-        .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
+        /* 內容卡片 */
+        .content {
+            padding: 20px 30px; background-color: rgba(255, 255, 255, 0.92); position: relative;
+            border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.3s ease, box-shadow 0.3s ease; backdrop-filter: blur(6px); 
+        }
+        .content:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(41, 121, 255, 0.15); }
+        .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
+        .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
 
-        /* 反思與心得區塊樣式 */
-        .reflection {
-            margin-top: 15px;
-            padding: 12px 15px;
-            background: rgba(44, 62, 80, 0.04);
-            border-left: 3px solid #2979ff;
-            border-radius: 0 6px 6px 0;
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #4a5568;
-            text-align: justify;
-        }
-        .reflection::before {
-            content: "💡 學習反思：";
-            display: block;
-            font-weight: bold;
-            color: #2979ff;
-            margin-bottom: 4px;
-            font-size: 0.9em;
-        }
+        /* 反思與心得區塊樣式 */
+        .reflection {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(44, 62, 80, 0.04);
+            border-left: 3px solid #2979ff;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #4a5568;
+            text-align: justify;
+        }
+        .reflection::before {
+            content: "💡 學習反思：";
+            display: block;
+            font-weight: bold;
+            color: #2979ff;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+        }
 
-        /* 圖片與 PDF 排版 */
-        .image-gallery { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
-        .image-gallery img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; }
-        .image-gallery img:hover { transform: scale(1.02); }
-        .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
-        .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
-        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
-        
-        .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
-        .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); } 50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); } }
-        @keyframes blinkEffect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        /* 圖片與 PDF 排版 */
+        .image-gallery { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .image-gallery img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; }
+        .image-gallery img:hover { transform: scale(1.02); }
+        .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
+        .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
+        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
+        
+        .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
+        .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15); transform: scale(1); } 50% { box-shadow: 0 6px 30px rgba(231, 76, 60, 0.4); transform: scale(1.02); } }
+        @keyframes blinkEffect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-        .link-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
-        .quake-link:hover { background-color: #e74c3c; }
+        .link-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .quake-link { display: inline-block; padding: 10px 20px; background-color: #34495e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s; cursor: pointer; text-align: center; }
+        .quake-link:hover { background-color: #e74c3c; }
 
-        /* 燈箱樣式 */
-        .lightbox-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.85);
-            z-index: 10000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        .lightbox-overlay.active { opacity: 1; pointer-events: auto; }
-        .lightbox-overlay img { max-width: 90%; max-height: 90%; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
-        .lightbox-overlay.active img { transform: scale(1); }
+        /* 燈箱樣式 */
+        .lightbox-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.85);
+            z-index: 10000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .lightbox-overlay.active { opacity: 1; pointer-events: auto; }
+        .lightbox-overlay img { max-width: 90%; max-height: 90%; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
+        .lightbox-overlay.active img { transform: scale(1); }
 
-        /* --- 地震網頁撕裂與發光裂痕特效 --- */
-        #quake-overlay { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            pointer-events: none; z-index: 9999; display: flex; opacity: 0; 
-        }
-        #quake-overlay.active { opacity: 1; }
-         
-        .crack-line { 
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleY(0); 
-            transform-origin: top; width: 12px; height: 100vh; background: #ff4700; 
-            clip-path: polygon(50% 0, 18% 10%, 82% 20%, 2% 30%, 98% 40%, 50% 50%, 18% 60%, 82% 70%, 2% 80%, 98% 90%, 50% 100%, 30% 100%, 78% 90%, -18% 80%, 62% 70%, -2% 60%, 30% 50%, -18% 40%, 62% 30%, -2% 20%, 30% 10%); 
-            opacity: 0; box-shadow: 0 0 45px 20px #ff4700; z-index: 10000;
-        }
+        /* --- 地震網頁撕裂與發光裂痕特效 --- */
+        #quake-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 9999; display: flex; opacity: 0; 
+        }
+        #quake-overlay.active { opacity: 1; }
+         
+        .crack-line { 
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleY(0); 
+            transform-origin: top; width: 12px; height: 100vh; background: #ff4700; 
+            clip-path: polygon(50% 0, 18% 10%, 82% 20%, 2% 30%, 98% 40%, 50% 50%, 18% 60%, 82% 70%, 2% 80%, 98% 90%, 50% 100%, 30% 100%, 78% 90%, -18% 80%, 62% 70%, -2% 60%, 30% 50%, -18% 40%, 62% 30%, -2% 20%, 30% 10%); 
+            opacity: 0; box-shadow: 0 0 45px 20px #ff4700; z-index: 10000;
+        }
 
-        #quake-overlay.active .crack-line { animation: crackFlash 1s ease-out forwards; }
+        #quake-overlay.active .crack-line { animation: crackFlash 1s ease-out forwards; }
 
-        @keyframes crackFlash {
-            0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
-            15% { opacity: 1; transform: translateX(-50%) scaleY(1); }
-            100% { opacity: 0; transform: translateX(-50%) scaleY(1); filter: blur(10px); }
-        }
+        @keyframes crackFlash {
+            0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
+            15% { opacity: 1; transform: translateX(-50%) scaleY(1); }
+            100% { opacity: 0; transform: translateX(-50%) scaleY(1); filter: blur(10px); }
+        }
 
-        /* 網頁震動動畫 */
-        @keyframes shake {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-15px, 5px) rotate(-1deg); }
-            20%, 40%, 60%, 80% { transform: translate(15px, -5px) rotate(1deg); }
-        }
-        .shake-active { animation: shake 0.35s ease-in-out infinite; overflow: hidden; }
+        /* 網頁震動動畫 */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-15px, 5px) rotate(-1deg); }
+            20%, 40%, 60%, 80% { transform: translate(15px, -5px) rotate(1deg); }
+        }
+        .shake-active { animation: shake 0.35s ease-in-out infinite; overflow: hidden; }
 
-        @media screen and (max-width: 600px) {
-            .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
-            .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
-            .timeline::after { left: 31px; }
-            .container { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
-            .left::after, .right::after { left: 21px; }
-            .right { left: 0%; }
-        }
-    </style>
+        @media screen and (max-width: 600px) {
+            .back-to-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
+            .back-to-home:hover { transform: translateX(-50%) scale(1.05); }
+            .timeline::after { left: 31px; }
+            .container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .container::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
+            .left::after, .right::after { left: 21px; }
+            .right { left: 0%; }
+        }
+    </style>
 </head>
 <body>
 
-    <svg style="position: absolute; width: 0; height: 0;">
-        <filter id="ink-disp-filter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-    </svg>
+    <svg style="position: absolute; width: 0; height: 0;">
+        <filter id="ink-disp-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
 
-    <div class="watercolor-background">
-        <div class="ink-blob ink-red"></div>
-        <div class="ink-blob ink-green"></div>
-        <div class="ink-blob ink-blue"></div>
-        <div class="ink-blob ink-accent"></div>
-    </div>
-    <div class="center-overlay"></div>
-    
-    <div id="ink-drops-container"></div>
+    <div class="watercolor-background">
+        <div class="ink-blob ink-red"></div>
+        <div class="ink-blob ink-green"></div>
+        <div class="ink-blob ink-blue"></div>
+        <div class="ink-blob ink-accent"></div>
+    </div>
+    <div class="center-overlay"></div>
+     
+    <div id="ink-drops-container"></div>
 
-    <div id="quake-overlay">
-        <div class="crack-line"></div>
-    </div>
+    <div id="quake-overlay">
+        <div class="crack-line"></div>
+    </div>
 
-    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
-        <img id="lightbox-img" src="" alt="放大圖片預覽">
-    </div>
+    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="放大圖片預覽">
+    </div>
 
-    <div id="main-wrapper">
-        <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home" onclick="triggerQuake(event, this.href)">
-            <span>🏠</span> 返回首頁
-        </a>
+    <div id="main-wrapper">
+        <a href="https://zxcvbnm010043-bot.github.io/" class="back-to-home" onclick="triggerQuake(event, this.href)">
+            <span>🏠</span> 返回首頁
+        </a>
 
-        <h1>地震學期末報告</h1>
+        <h1>地震學期末報告</h1>
 
-        <div class="timeline">
-            <div class="container left">
-                <div class="content">
-                    <div class="date">02/25</div>
-                    <div class="title">軟體安裝與帳號申請</div>
-                    <div class="image-gallery">
-                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1" onclick="openLightbox(this.src)">
-                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2" onclick="openLightbox(this.src)">
-                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3" onclick="openLightbox(this.src)">
-                    </div>
-                    <div class="reflection">學習新的 AI 工具 antigravity，並成功搭配 Hugging Face 與 GitHub 建立起往後專案開發與協作的基礎工作流。</div>
-                </div>
-            </div>
+        <div class="timeline">
+            <div class="container left">
+                <div class="content">
+                    <div class="date">02/25</div>
+                    <div class="title">軟體安裝與帳號申請</div>
+                    <div class="image-gallery">
+                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/088a4bc80ba80080a0c2251fd3e5bfdd.png" alt="首頁圖片 1" onclick="openLightbox(this.src)">
+                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2" onclick="openLightbox(this.src)">
+                        <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3" onclick="openLightbox(this.src)">
+                    </div>
+                    <div class="reflection">學習新的 AI 工具 antigravity，並成功搭配 Hugging Face 與 GitHub 建立起往後專案開發與協作的基礎工作流。</div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content">
-                    <div class="date">03/04</div>
-                    <div class="title">地震學課本第一章</div>
-                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_ch1/" onclick="triggerQuake(event, this.href)">進入網站</a>
-                    <div class="reflection">建置結構完整的電子化課本筆記，利用 GitHub Pages 平台將地震學第一章的靜態網頁與理論基礎進行線上可視化呈現。</div>
-                </div>
-            </div>
+            <div class="container right">
+                <div class="content">
+                    <div class="date">03/04</div>
+                    <div class="title">地震學課本第一章</div>
+                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_ch1/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">建置結構完整的電子化課本筆記，利用 GitHub Pages 平台將地震學第一章的靜態網頁與理論基礎進行線上可視化呈現。</div>
+                </div>
+            </div>
 
-            <div class="container left">
-                <div class="content">
-                    <div class="date">03/11</div>
-                    <div class="title">張睿明老師演講心得</div>
-                    
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">🌊 海底火山爆發地震</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf&embedded=true"></iframe>
-                    </div>
-                    
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">🤖 AI 演講成果</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
-                    </div>
-                    <div class="reflection">
-                        <strong>海底火山爆發：</strong>嘗試運用全新的 Prompt 技巧驅使 AI 進行深度統整，使生成的地震報告能具備更高規格的詳細說明。<br>
-                        <strong>演講心得：</strong>深刻思索與探討 AI 在現今科研與學術界中的定位。學會如何掌握主導權、更具效益地利用 AI 作為輔助工具，而非盲目被其技術所制約。
-                    </div>
-                </div>
-            </div>
+            <div class="container left">
+                <div class="content">
+                    <div class="date">03/11</div>
+                    <div class="title">張睿明老師演講心得</div>
+                     
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">🌊 海底火山爆發地震</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf&embedded=true"></iframe>
+                    </div>
+                     
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">🤖 AI 演講成果</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
+                    </div>
+                    <div class="reflection">
+                        <strong>海底火山爆發：</strong>嘗試運用全新的 Prompt 技巧驅使 AI 進行深度統整，使生成的地震報告能具備更高規格的詳細說明。<br>
+                        <strong>演講心得：</strong>深刻思索與探討 AI 在現今科研與學術界中的定位。學會如何掌握主導權、更具效益地利用 AI 作為輔助工具，而非盲目被其技術所制約。
+                    </div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content">
-                    <div class="date">03/18</div>
-                    <div class="title">地震學實驗</div>
-                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站</a>
-                    <div class="reflection">實際操作 SmartSolo 節點式地震儀進行微震監測，掌握了野外儀器架設的技術細節。同時，利用 Python 讀取微震實驗所得的 SAC 檔案，並透過 ObsPy 庫進行完整的地震學波形資料 analysis。</div>
-                </div>
-            </div>
+            <div class="container right">
+                <div class="content">
+                    <div class="date">03/18</div>
+                    <div class="title">地震學實驗</div>
+                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">實際操作 SmartSolo 節點式地震儀進行微震監測，掌握了野外儀器架設的技術細節。同時，利用 Python 讀取微震實驗所得的 SAC 檔案，並透過 ObsPy 庫進行完整的地震學波形資料 analysis。</div>
+                </div>
+            </div>
 
-            <div class="container left">
-                <div class="content">
-                    <div class="date">04/01</div>
-                    <div class="title">參觀國家地震工程研究中心</div>
-                    <div class="link-group">
-                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW5/" onclick="triggerQuake(event, this.href)">進入網站 (HW5)</a>
-                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站 (HW4)</a>
-                    </div>
-                    <div class="reflection">實地走訪國家地震工程研究中心 (NCREE)，全面認識其核心業務與震災防禦手段。導覽深入介紹了多種結構阻尼器的工程應用，並直觀理解地震來襲時不同阻尼器所展現的減震與抗震效能。</div>
-                </div>
-            </div>
+            <div class="container left">
+                <div class="content">
+                    <div class="date">04/01</div>
+                    <div class="title">參觀國家地震工程研究中心</div>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW5/" onclick="triggerQuake(event, this.href)">進入網站 (HW5)</a>
+                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站 (HW4)</a>
+                    </div>
+                    <div class="reflection">實地走訪國家地震工程研究中心 (NCREE)，全面認識其核心業務與震災防禦手段。導覽深入介紹了多種結構阻尼器的工程應用，並直觀理解地震來襲時不同阻尼器所展現的減震與抗震效能。</div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content">
-                    <div class="date">04/15</div>
-                    <div class="title">期中考</div>
-                    <div class="reflection">驗收前半學期以來關於地震波傳播理論、震源參數以及走時曲線推導等核心知識的掌握程度。</div>
-                </div>
-            </div>
+            <div class="container right">
+                <div class="content">
+                    <div class="date">04/15</div>
+                    <div class="title">期中考</div>
+                    <div class="reflection">驗收前半學期以來關於地震波傳播理論、震源參數以及走時曲線推導等核心知識的掌握程度。</div>
+                </div>
+            </div>
 
-            <div class="container left">
-                <div class="content">
-                    <div class="date">04/22</div>
-                    <div class="title">宋冠毅老師演講</div>
-                    
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
-                    </div>
-                    <div class="reflection">聆聽宋冠毅老師分享豐富的海外留學與科研經歷。演講中特別介紹了「青年百億海外留學計畫」等相關寶貴資訊，勉勵我們保持國際視野，勇敢跳出舒適圈，積極爭取涉外拓展的機會。</div>
-                </div>
-            </div>
+            <div class="container left">
+                <div class="content">
+                    <div class="date">04/22</div>
+                    <div class="title">宋冠毅老師演講</div>
+                     
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
+                    </div>
+                    <div class="reflection">聆聽宋冠毅老師分享豐富的海外留學與科研經歷。演講中特別介紹了「青年百億海外留學計畫」等相關寶貴資訊，勉勵我們保持國際視野，勇敢跳出舒適圈，積極爭取涉外拓展的機會。</div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content">
-                    <div class="date">04/29</div>
-                    <div class="title">地震學第3章</div>
-                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW7_CH3/" onclick="triggerQuake(event, this.href)">進入網站</a>
-                    <div class="reflection">透過 GitHub 整合與排版地震學課本第三章內容，重點針對複雜的波動方程與幾何射線理論進行圖文並茂的條理解析。</div>
-                </div>
-            </div>
+            <div class="container right">
+                <div class="content">
+                    <div class="date">04/29</div>
+                    <div class="title">地震學第3章</div>
+                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW7_CH3/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">透過 GitHub 整合與排版地震學課本第三章內容，重點針對複雜的波動方程與幾何射線理論進行圖文並茂的條理解析。</div>
+                </div>
+            </div>
 
-            <div class="container left">
-                <div class="content">
-                    <div class="date">05/13、05/20</div>
-                    <div class="title">震源機制、初動解與第四章</div>
-                    <div class="link-group">
-                        <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">CH4 震源機制網站</a>
-                        <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">初動解繪製震源機制</a>
-                    </div>
-                    <div class="reflection">深入探討震源機制球（海灘球）的核心物理意義。學會使用投影網手繪震源機制的圖解原理，並進一步結合實際測站的 P 波初動觀測資料（壓、張力觀測），在網頁端程式化繪製出精確的震源機制解。</div>
-                </div>
-            </div>
+            <div class="container left">
+                <div class="content">
+                    <div class="date">05/13、05/20</div>
+                    <div class="title">震源機制、初動解與第四章</div>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">CH4 震源機制網站</a>
+                        <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">初動解繪製震源機制</a>
+                    </div>
+                    <div class="reflection">深入探討震源機制球（海灘球）的核心物理意義。學會使用投影網手繪震源機制的圖解原理，並進一步結合實際測站的 P 波初動觀測資料（壓、張力觀測），在網頁端程式化繪製出精確的震源機制解。</div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content">
-                    <div class="date">05/27</div>
-                    <div class="title">Raspberry Pi 體驗</div>
-                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_raspberryPi/" onclick="triggerQuake(event, this.href)">進入網站</a>
-                    <div class="reflection">實作微型地震儀開發：學習硬體開發板與麵包板的接線技術（了解接錯接地線引發失火的危險性）。成功將加速度感測器的搖晃訊號與 Discord API 串接，實作即時地震警報發布機制，並繪製出關鍵 5 秒內的加速度位移圖，依據峰值大小科學性地評估地震強度。</div>
-                </div>
-            </div>
+            <div class="container right">
+                <div class="content">
+                    <div class="date">05/27</div>
+                    <div class="title">Raspberry Pi 體驗</div>
+                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_raspberryPi/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">實作微型地震儀開發：學習硬體開發板與麵包板的接線技術（了解接錯接地線引發失火的危險性）。成功將加速度感測器的搖晃訊號與 Discord API 串接，實作即時地震警報發布機制，並繪製出關鍵 5 秒內的加速度位移圖，依據峰值大小科學性地評估地震強度。</div>
+                </div>
+            </div>
 
-            <div class="container left">
-                <div class="content">
-                    <div class="date">06/03</div>
-                    <div class="title">Overleaf 報告製作</div>
-                    
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📖 CH1 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH1_report.pdf&embedded=true"></iframe>
-                    </div>
-                    <div class="link-group">
-                        <a class="quake-link" href="https://www.overleaf.com/read/gfwqdbgbrddk#58fb72" onclick="triggerQuake(event, this.href)">CH1 投影片 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/wrnrxyxvsccn#b0fb5b" onclick="triggerQuake(event, this.href)">CH1 報告 (Overleaf)</a>
-                    </div>
+            <div class="container left">
+                <div class="content">
+                    <div class="date">06/03</div>
+                    <div class="title">Overleaf 報告製作</div>
+                     
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📖 CH1 報告與投影片預覽</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH1_report.pdf&embedded=true"></iframe>
+                    </div>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://www.overleaf.com/read/gfwqdbgbrddk#58fb72" onclick="triggerQuake(event, this.href)">CH1 投影片 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/wrnrxyxvsccn#b0fb5b" onclick="triggerQuake(event, this.href)">CH1 報告 (Overleaf)</a>
+                    </div>
 
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📖 CH3 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH3_report.pdf&embedded=true"></iframe>
-                    </div>
-                    <div class="link-group">
-                        <a class="quake-link" href="https://www.overleaf.com/read/trpqgcfbmdjz#71a3f8" onclick="triggerQuake(event, this.href)">CH3 投影片 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/bspcsxybsqnc#d65747" onclick="triggerQuake(event, this.href)">CH3 報告 (Overleaf)</a>
-                    </div>
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📖 CH3 報告與投影片預覽</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH3_report.pdf&embedded=true"></iframe>
+                    </div>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://www.overleaf.com/read/trpqgcfbmdjz#71a3f8" onclick="triggerQuake(event, this.href)">CH3 投影片 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/bspcsxybsqnc#d65747" onclick="triggerQuake(event, this.href)">CH3 報告 (Overleaf)</a>
+                    </div>
 
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📖 CH4 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH4_report.pdf&embedded=true"></iframe>
-                    </div>
-                    <div class="link-group">
-                        <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
-                    </div>
-                    <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
-                </div>
-            </div>
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📖 CH4 報告與投影片預覽</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH4_report.pdf&embedded=true"></iframe>
+                    </div>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
+                    </div>
+                    <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
+                </div>
+            </div>
 
-            <div class="container right">
-                <div class="content highlight-final">
-                    <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
-                    <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 15px;">期末整合報告與簡報</div>
-                    
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf&embedded=true"></iframe>
-                    </div>
+            <div class="container right">
+                <div class="content highlight-final">
+                    <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
+                    <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 15px;">期末整合報告與簡報</div>
+                     
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF 預覽)</div>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf"></iframe>
+                    </div>
 
-                    <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf&embedded=true"></iframe>
-                    </div>
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF 預覽)</div>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf"></iframe>
+                    </div>
 
-                    <div class="link-group" style="margin-top: 15px;">
-                        <a class="quake-link" href="https://www.overleaf.com/read/dptdvxxhrdqk#ed27b2" onclick="triggerQuake(event, this.href)">📖 期末報告 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/ksxrgfjwhpjq#b6ed6a" onclick="triggerQuake(event, this.href)">📊 期末簡報 (Overleaf)</a>
-                        <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 5px 0;">
-                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report.pdf" target="_blank">🔍 在 GitHub 查看完整報告</a>
-                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_presentation.pdf" target="_blank">🔍 在 GitHub 查看發表投影片</a>
-                    </div>
+                    <div class="link-group" style="margin-top: 15px;">
+                        <a class="quake-link" href="https://www.overleaf.com/read/ksxrgfjwhpjq#b6ed6a" onclick="triggerQuake(event, this.href)">📖 期末報告 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/dptdvxxhrdqk#ed27b2" onclick="triggerQuake(event, this.href)">📊 期末簡報 (Overleaf)</a>
+                        <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 5px 0;">
+                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report.pdf" target="_blank">🔍 在 GitHub 查看完整報告</a>
+                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_presentation.pdf" target="_blank">🔍 在 GitHub 查看發表投影片</a>
+                    </div>
 
-                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，將精細編排的學術報告與簡報投影片上傳至 GitHub，完成了這份高完整度的地震學期末整合總驗收。</div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，將精細編排的學術報告與簡報投影片上傳至 GitHub，完成了這份高完整度的地震學期末整合總驗收。</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const dropsContainer = document.getElementById('ink-drops-container');
-        const mainWrapper = document.getElementById('main-wrapper');
+    <script>
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const dropsContainer = document.getElementById('ink-drops-container');
+        const mainWrapper = document.getElementById('main-wrapper');
 
-        // 燈箱控制功能
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.add('active');
-        }
-        function closeLightbox() {
-            lightbox.classList.remove('active');
-        }
+        // 燈箱控制功能
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
 
-        // 水墨滴落邏輯：在畫面上方隨機生成並滴下
-        function createInkDrops() {
-            const dropCount = Math.floor(Math.random() * 5) + 10; // 生成 10-14 滴水墨
-            
-            for (let i = 0; i < dropCount; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('ink-drop');
-                
-                const size = Math.floor(Math.random() * 40) + 40; 
-                const leftPos = Math.floor(Math.random() * 100); 
-                
-                drop.style.width = `${size}px`;
-                drop.style.height = `${size}px`;
-                drop.style.left = `${leftPos}vw`;
-                drop.style.top = `-100px`; 
-                
-                const targetVh = Math.floor(Math.random() * 80) + 20; 
-                const windowHeight = window.innerHeight;
-                const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
-                
-                drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
+        // 水墨滴落邏輯：在畫面上方隨機生成並滴下
+        function createInkDrops() {
+            const dropCount = Math.floor(Math.random() * 5) + 10; // 生成 10-14 滴水墨
+             
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('ink-drop');
+                 
+                const size = Math.floor(Math.random() * 40) + 40; 
+                const leftPos = Math.floor(Math.random() * 100); 
+                 
+                drop.style.width = `${size}px`;
+                drop.style.height = `${size}px`;
+                drop.style.left = `${leftPos}vw`;
+                drop.style.top = `-100px`; 
+                 
+                const targetVh = Math.floor(Math.random() * 80) + 20; 
+                const windowHeight = window.innerHeight;
+                const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
+                 
+                drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
 
-                const delay = Math.random() * 0.3;
-                drop.style.animation = `inkSplashRevised 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
-                
-                dropsContainer.appendChild(drop);
+                const delay = Math.random() * 0.3;
+                drop.style.animation = `inkSplashRevised 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
+                 
+                dropsContainer.appendChild(drop);
 
-                // 動畫結束後移除 DOM 節點
-                setTimeout(() => { drop.remove(); }, 1600);
-            }
-        }
+                // 動畫結束後移除 DOM 節點
+                setTimeout(() => { drop.remove(); }, 1600);
+            }
+        }
 
-        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半並跳轉
-        function triggerQuake(event, targetUrl) {
-            event.preventDefault(); 
-            
-            // 1. 全畫面開始劇烈搖晃
-            document.body.classList.add('shake-active');
-            
-            // 2. 觸發水墨從頂端滴落
-            createInkDrops();
-            
-            // 設定搖晃 0.6 秒後觸發網頁撕裂特效
-            setTimeout(() => {
-                document.body.classList.remove('shake-active');
-                
-                const rect = mainWrapper.getBoundingClientRect();
-                
-                mainWrapper.style.backgroundColor = '#fbfbf6'; 
-                
-                // --- 製作左半邊網頁複本 ---
-                const leftClone = mainWrapper.cloneNode(true);
-                leftClone.id = ''; 
-                leftClone.querySelectorAll('iframe').forEach(iframe => {
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
-                    iframe.parentNode.replaceChild(placeholder, iframe);
-                });
-                leftClone.style.position = 'fixed';
-                leftClone.style.top = rect.top + 'px';
-                leftClone.style.left = rect.left + 'px';
-                leftClone.style.width = rect.width + 'px';
-                leftClone.style.height = rect.height + 'px';
-                leftClone.style.zIndex = '9998';
-                leftClone.style.pointerEvents = 'none';
-                leftClone.style.clipPath = 'polygon(0 0, 50% 0, 48% 10%, 52% 20%, 48% 30%, 52% 40%, 48% 50%, 52% 60%, 48% 70%, 52% 80%, 48% 90%, 50% 100%, 0 100%)';
-                leftClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
-                
-                // --- 製作右半邊網頁複本 ---
-                const rightClone = mainWrapper.cloneNode(true);
-                rightClone.id = '';
-                rightClone.querySelectorAll('iframe').forEach(iframe => {
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
-                    iframe.parentNode.replaceChild(placeholder, iframe);
-                });
-                rightClone.style.position = 'fixed';
-                rightClone.style.top = rect.top + 'px';
-                rightClone.style.left = rect.left + 'px';
-                rightClone.style.width = rect.width + 'px';
-                rightClone.style.height = rect.height + 'px';
-                rightClone.style.zIndex = '9998';
-                rightClone.style.pointerEvents = 'none';
-                rightClone.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 48% 90%, 52% 80%, 48% 70%, 52% 60%, 48% 50%, 52% 40%, 48% 30%, 52% 20%, 48% 10%)';
-                rightClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
-                
-                document.body.appendChild(leftClone);
-                document.body.appendChild(rightClone);
-                
-                // 隱藏原始網頁與背景
-                mainWrapper.style.opacity = '0';
-                document.querySelector('.watercolor-background').style.opacity = '0';
-                document.querySelector('.center-overlay').style.opacity = '0';
-                document.body.style.backgroundColor = '#050505';
-                
-                // 觸發中央發光裂痕動畫
-                document.getElementById('quake-overlay').classList.add('active');
-                
-                // 處理撕裂位移與跳轉邏輯
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        // 左半邊向左下方傾斜滑出
-                        leftClone.style.transform = 'translate(-35vw, 8vh) rotate(-4deg)';
-                        leftClone.style.opacity = '0';
-                        
-                        // 右半邊向右上方傾斜滑出
-                        rightClone.style.transform = 'translate(35vw, -8vh) rotate(4deg)';
-                        rightClone.style.opacity = '0';
-                    });
-                });
+        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半並跳轉
+        function triggerQuake(event, targetUrl) {
+            event.preventDefault(); 
+             
+            // 1. 全畫面開始劇烈搖晃
+            document.body.classList.add('shake-active');
+             
+            // 2. 觸發水墨從頂端滴落
+            createInkDrops();
+             
+            // 設定搖晃 0.6 秒後觸發網頁撕裂特效
+            setTimeout(() => {
+                document.body.classList.remove('shake-active');
+                 
+                const rect = mainWrapper.getBoundingClientRect();
+                 
+                mainWrapper.style.backgroundColor = '#fbfbf6'; 
+                 
+                // --- 製作左半邊網頁複本 ---
+                const leftClone = mainWrapper.cloneNode(true);
+                leftClone.id = ''; 
+                leftClone.querySelectorAll('iframe').forEach(iframe => {
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
+                    iframe.parentNode.replaceChild(placeholder, iframe);
+                });
+                leftClone.style.position = 'fixed';
+                leftClone.style.top = rect.top + 'px';
+                leftClone.style.left = rect.left + 'px';
+                leftClone.style.width = rect.width + 'px';
+                leftClone.style.height = rect.height + 'px';
+                leftClone.style.zIndex = '9998';
+                leftClone.style.pointerEvents = 'none';
+                leftClone.style.clipPath = 'polygon(0 0, 50% 0, 48% 10%, 52% 20%, 48% 30%, 52% 40%, 48% 50%, 52% 60%, 48% 70%, 52% 80%, 48% 90%, 50% 100%, 0 100%)';
+                leftClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
+                 
+                // --- 製作右半邊網頁複本 ---
+                const rightClone = mainWrapper.cloneNode(true);
+                rightClone.id = '';
+                rightClone.querySelectorAll('iframe').forEach(iframe => {
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
+                    iframe.parentNode.replaceChild(placeholder, iframe);
+                });
+                rightClone.style.position = 'fixed';
+                rightClone.style.top = rect.top + 'px';
+                rightClone.style.left = rect.left + 'px';
+                rightClone.style.width = rect.width + 'px';
+                rightClone.style.height = rect.height + 'px';
+                rightClone.style.zIndex = '9998';
+                rightClone.style.pointerEvents = 'none';
+                rightClone.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 48% 90%, 52% 80%, 48% 70%, 52% 60%, 48% 50%, 52% 40%, 48% 30%, 52% 20%, 48% 10%)';
+                rightClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
+                 
+                document.body.appendChild(leftClone);
+                document.body.appendChild(rightClone);
+                 
+                // 隱藏原始網頁與背景
+                mainWrapper.style.opacity = '0';
+                document.querySelector('.watercolor-background').style.opacity = '0';
+                document.querySelector('.center-overlay').style.opacity = '0';
+                document.body.style.backgroundColor = '#050505';
+                 
+                // 觸發中央發光裂痕動畫
+                document.getElementById('quake-overlay').classList.add('active');
+                 
+                // 處理撕裂位移與跳轉邏輯
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        // 左半邊向左下方傾斜滑出
+                        leftClone.style.transform = 'translate(-35vw, 8vh) rotate(-4deg)';
+                        leftClone.style.opacity = '0';
+                         
+                        // 右半邊向右上方傾斜滑出
+                        rightClone.style.transform = 'translate(35vw, -8vh) rotate(4deg)';
+                        rightClone.style.opacity = '0';
+                    });
+                });
 
-                // 動畫結束後，正式跳轉到目標網址
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 1000);
+                // 動畫結束後，正式跳轉到目標網址
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 1000);
 
-            }, 600);
-        }
-    </script>
+            }, 600);
+        }
+    </script>
 </body>
 </html>
