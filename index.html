@@ -384,7 +384,7 @@
                     </div>
                     <div class="link-group">
                         <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="simple">CH4 報告 (Overleaf)</a>
                     </div>
                     <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
                 </div>
@@ -396,12 +396,12 @@
                     <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 15px;">期末整合報告與簡報</div>
                      
                     <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF)</div>
+                        <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF 預覽)</div>
                         <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf&embedded=true"></iframe>
                     </div>
 
                     <div class="pdf-viewer">
-                        <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF)</div>
+                        <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF 預覽)</div>
                         <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf&embedded=true"></iframe>
                     </div>
 
@@ -424,6 +424,15 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
         const mainWrapper = document.getElementById('main-wrapper');
+
+        // 燈箱控制功能
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
 
         // 水墨滴落邏輯：在畫面上方隨機生成並滴下
         function createInkDrops() {
@@ -457,7 +466,7 @@
             }
         }
 
-        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半
+        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半並跳轉
         function triggerQuake(event, targetUrl) {
             event.preventDefault(); 
              
@@ -473,13 +482,11 @@
                  
                 const rect = mainWrapper.getBoundingClientRect();
                  
-                // 為了讓複本看起來是實心的（擋住後面的黑畫面），賦予底色
                 mainWrapper.style.backgroundColor = '#fbfbf6'; 
                  
                 // --- 製作左半邊網頁複本 ---
                 const leftClone = mainWrapper.cloneNode(true);
-                leftClone.id = ''; // 清除 ID 避免衝突
-                // 移除 iframe 以防止複製時重新載入造成卡頓
+                leftClone.id = ''; 
                 leftClone.querySelectorAll('iframe').forEach(iframe => {
                     const placeholder = document.createElement('div');
                     placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
@@ -492,7 +499,6 @@
                 leftClone.style.height = rect.height + 'px';
                 leftClone.style.zIndex = '9998';
                 leftClone.style.pointerEvents = 'none';
-                // 利用多邊形裁切出「左半邊」鋸齒狀
                 leftClone.style.clipPath = 'polygon(0 0, 50% 0, 48% 10%, 52% 20%, 48% 30%, 52% 40%, 48% 50%, 52% 60%, 48% 70%, 52% 80%, 48% 90%, 50% 100%, 0 100%)';
                 leftClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
                  
@@ -511,15 +517,13 @@
                 rightClone.style.height = rect.height + 'px';
                 rightClone.style.zIndex = '9998';
                 rightClone.style.pointerEvents = 'none';
-                // 利用多邊形裁切出「右半邊」鋸齒狀
                 rightClone.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 48% 90%, 52% 80%, 48% 70%, 52% 60%, 48% 50%, 52% 40%, 48% 30%, 52% 20%, 48% 10%)';
                 rightClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
                  
-                // 将兩半網頁加入畫面
                 document.body.appendChild(leftClone);
                 document.body.appendChild(rightClone);
                  
-                // 隱藏原始網頁與背景，讓網頁底部變成黑洞深淵
+                // 隱藏原始網頁與背景
                 mainWrapper.style.opacity = '0';
                 document.querySelector('.watercolor-background').style.opacity = '0';
                 document.querySelector('.center-overlay').style.opacity = '0';
@@ -528,7 +532,7 @@
                 // 觸發中央發光裂痕動畫
                 document.getElementById('quake-overlay').classList.add('active');
                  
-                // 確保 CSS 渲染完畢後，執行撕裂位移動畫
+                // 補齊原先被截斷的撕裂位移與跳轉邏輯
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
                         // 左半邊向左下方傾斜滑出
@@ -541,23 +545,12 @@
                     });
                 });
 
-                // 動畫演出完畢 (1秒) 後跳轉網頁
+                // 動畫結束後，正式跳轉到目標網址
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 1000);
-                 
-            } , 600); // 搖晃 0.6 秒
-        }
 
-        // 圖片燈箱控制
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.add('active');
-        }
-
-        function closeLightbox() {
-            lightbox.classList.remove('active');
-            setTimeout(() => { lightboxImg.src = ""; }, 300);
+            }, 600);
         }
     </script>
 </body>
