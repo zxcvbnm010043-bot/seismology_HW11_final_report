@@ -116,7 +116,7 @@
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
         .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
 
-        /* 新增：反思與心得區塊樣式 */
+        /* 反思與心得區塊樣式 */
         .reflection {
             margin-top: 15px;
             padding: 12px 15px;
@@ -393,8 +393,24 @@
             <div class="container right">
                 <div class="content highlight-final">
                     <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
-                    <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 0;">期末報告</div>
-                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，完成了這份高完整度的地震學期末整合報告。</div>
+                    <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 15px;">期末整合報告與簡報</div>
+                    
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF)</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_fianl_report.pdf&embedded=true"></iframe>
+                    </div>
+
+                    <div class="pdf-viewer">
+                        <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF)</div>
+                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_fianl_presentation.pdf&embedded=true"></iframe>
+                    </div>
+
+                    <div class="link-group" style="margin-top: 15px;">
+                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_fianl_report.pdf" target="_blank">🔍 在 GitHub 查看完整報告</a>
+                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_fianl_presentation.pdf" target="_blank">🔍 在 GitHub 查看發表投影片</a>
+                    </div>
+
+                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，將精細編排的學術報告與簡報投影片上傳至 GitHub，完成了這份高完整度的地震學期末整合總驗收。</div>
                 </div>
             </div>
         </div>
@@ -527,7 +543,7 @@
                     window.location.href = targetUrl;
                 }, 1000);
                 
-            }, 600); // 搖晃 0.6 秒
+            } , 600); // 搖晃 0.6 秒
         }
 
         // 圖片燈箱控制
