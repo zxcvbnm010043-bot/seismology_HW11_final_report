@@ -143,7 +143,7 @@
         .image-gallery img:hover { transform: scale(1.02); }
         .pdf-viewer { margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #f9f9f9; }
         .pdf-title-bar { background-color: #34495e; color: white; padding: 8px 12px; font-size: 0.9em; font-weight: bold; }
-        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; }
+        .pdf-viewer iframe { width: 100%; height: 350px; border: none; display: block; background: #fff; }
         
         .content.highlight-final { border: 2px solid #e74c3c; background-color: rgba(255, 249, 249, 0.95); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.2); animation: pulseGlow 2.5s infinite ease-in-out; }
         .final-badge { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-left: 8px; vertical-align: middle; display: inline-block; animation: blinkEffect 1.5s infinite; }
@@ -170,7 +170,7 @@
             pointer-events: none; z-index: 9999; display: flex; opacity: 0; 
         }
         #quake-overlay.active { opacity: 1; }
-         
+           
         .crack-line { 
             position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleY(0); 
             transform-origin: top; width: 12px; height: 100vh; background: #ff4700; 
@@ -269,12 +269,12 @@
                     
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">🌊 海底火山爆發地震</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/20220115%E6%9D%B1%E5%AE%B6%E6%B5%B7%E5%BA%95%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC.pdf"></iframe>
                     </div>
                     
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">🤖 AI 演講成果</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf"></iframe>
                     </div>
                     <div class="reflection">
                         <strong>海底火山爆發：</strong>嘗試運用全新的 Prompt 技巧驅使 AI 進行深度統整，使生成的地震報告能具備更高規格的詳細說明。<br>
@@ -319,7 +319,7 @@
                     
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf"></iframe>
                     </div>
                     <div class="reflection">聆聽宋冠毅老師分享豐富的海外留學與科研經歷。演講中特別介紹了「青年百億海外留學計畫」等相關寶貴資訊，勉勵我們保持國際視野，勇敢跳出舒適圈，積極爭取涉外拓展的機會。</div>
                 </div>
@@ -362,7 +362,7 @@
                     
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📖 CH1 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH1_report.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH1_report.pdf"></iframe>
                     </div>
                     <div class="link-group">
                         <a class="quake-link" href="https://www.overleaf.com/read/gfwqdbgbrddk#58fb72" onclick="triggerQuake(event, this.href)">CH1 投影片 (Overleaf)</a>
@@ -371,7 +371,7 @@
 
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📖 CH3 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH3_report.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH3_report.pdf"></iframe>
                     </div>
                     <div class="link-group">
                         <a class="quake-link" href="https://www.overleaf.com/read/trpqgcfbmdjz#71a3f8" onclick="triggerQuake(event, this.href)">CH3 投影片 (Overleaf)</a>
@@ -380,13 +380,13 @@
 
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📖 CH4 報告與投影片預覽</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH4_report.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report_CH4_report.pdf"></iframe>
                     </div>
                     <div class="link-group">
                         <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
                         <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
                     </div>
-                    <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
+                    <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code>時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
                 </div>
             </div>
 
@@ -397,161 +397,16 @@
                     
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf"></iframe>
                     </div>
 
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf"></iframe>
                     </div>
 
                     <div class="link-group" style="margin-top: 15px;">
                         <a class="quake-link" href="https://www.overleaf.com/read/dptdvxxhrdqk#ed27b2" onclick="triggerQuake(event, this.href)">📖 期末報告 (Overleaf)</a>
                         <a class="quake-link" href="https://www.overleaf.com/read/ksxrgfjwhpjq#b6ed6a" onclick="triggerQuake(event, this.href)">📊 期末簡報 (Overleaf)</a>
                         <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 5px 0;">
-                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report.pdf" target="_blank">🔍 在 GitHub 查看完整報告</a>
-                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_presentation.pdf" target="_blank">🔍 在 GitHub 查看發表投影片</a>
-                    </div>
-
-                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，將精細編排的學術報告與簡報投影片上傳至 GitHub，完成了這份高完整度的地震學期末整合總驗收。</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const dropsContainer = document.getElementById('ink-drops-container');
-        const mainWrapper = document.getElementById('main-wrapper');
-
-        // 燈箱控制功能
-        function openLightbox(src) {
-            lightboxImg.src = src;
-            lightbox.classList.add('active');
-        }
-        function closeLightbox() {
-            lightbox.classList.remove('active');
-        }
-
-        // 水墨滴落邏輯：在畫面上方隨機生成並滴下
-        function createInkDrops() {
-            const dropCount = Math.floor(Math.random() * 5) + 10; // 生成 10-14 滴水墨
-            
-            for (let i = 0; i < dropCount; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('ink-drop');
-                
-                const size = Math.floor(Math.random() * 40) + 40; 
-                const leftPos = Math.floor(Math.random() * 100); 
-                
-                drop.style.width = `${size}px`;
-                drop.style.height = `${size}px`;
-                drop.style.left = `${leftPos}vw`;
-                drop.style.top = `-100px`; 
-                
-                const targetVh = Math.floor(Math.random() * 80) + 20; 
-                const windowHeight = window.innerHeight;
-                const actualFallDistance = (windowHeight * (targetVh / 100)) + 100;
-                
-                drop.style.setProperty('--fall-distance', `${actualFallDistance}px`);
-
-                const delay = Math.random() * 0.3;
-                drop.style.animation = `inkSplashRevised 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) ${delay}s forwards`;
-                
-                dropsContainer.appendChild(drop);
-
-                // 動畫結束後移除 DOM 節點
-                setTimeout(() => { drop.remove(); }, 1600);
-            }
-        }
-
-        // 終極特效：搖晃 -> 水墨 -> 中間產生裂痕 -> 整個網頁撕裂為兩半並跳轉
-        function triggerQuake(event, targetUrl) {
-            event.preventDefault(); 
-            
-            // 1. 全畫面開始劇烈搖晃
-            document.body.classList.add('shake-active');
-            
-            // 2. 觸發水墨從頂端滴落
-            createInkDrops();
-            
-            // 設定搖晃 0.6 秒後觸發網頁撕裂特效
-            setTimeout(() => {
-                document.body.classList.remove('shake-active');
-                
-                const rect = mainWrapper.getBoundingClientRect();
-                
-                mainWrapper.style.backgroundColor = '#fbfbf6'; 
-                
-                // --- 製作左半邊網頁複本 ---
-                const leftClone = mainWrapper.cloneNode(true);
-                leftClone.id = ''; 
-                leftClone.querySelectorAll('iframe').forEach(iframe => {
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
-                    iframe.parentNode.replaceChild(placeholder, iframe);
-                });
-                leftClone.style.position = 'fixed';
-                leftClone.style.top = rect.top + 'px';
-                leftClone.style.left = rect.left + 'px';
-                leftClone.style.width = rect.width + 'px';
-                leftClone.style.height = rect.height + 'px';
-                leftClone.style.zIndex = '9998';
-                leftClone.style.pointerEvents = 'none';
-                leftClone.style.clipPath = 'polygon(0 0, 50% 0, 48% 10%, 52% 20%, 48% 30%, 52% 40%, 48% 50%, 52% 60%, 48% 70%, 52% 80%, 48% 90%, 50% 100%, 0 100%)';
-                leftClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
-                
-                // --- 製作右半邊網頁複本 ---
-                const rightClone = mainWrapper.cloneNode(true);
-                rightClone.id = '';
-                rightClone.querySelectorAll('iframe').forEach(iframe => {
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = "width:100%; height:350px; background:#ddd;";
-                    iframe.parentNode.replaceChild(placeholder, iframe);
-                });
-                rightClone.style.position = 'fixed';
-                rightClone.style.top = rect.top + 'px';
-                rightClone.style.left = rect.left + 'px';
-                rightClone.style.width = rect.width + 'px';
-                rightClone.style.height = rect.height + 'px';
-                rightClone.style.zIndex = '9998';
-                rightClone.style.pointerEvents = 'none';
-                rightClone.style.clipPath = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 48% 90%, 52% 80%, 48% 70%, 52% 60%, 48% 50%, 52% 40%, 48% 30%, 52% 20%, 48% 10%)';
-                rightClone.style.transition = 'transform 1s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1s ease-in';
-                
-                document.body.appendChild(leftClone);
-                document.body.appendChild(rightClone);
-                
-                // 隱藏原始網頁與背景
-                mainWrapper.style.opacity = '0';
-                document.querySelector('.watercolor-background').style.opacity = '0';
-                document.querySelector('.center-overlay').style.opacity = '0';
-                document.body.style.backgroundColor = '#050505';
-                
-                // 觸發中央發光裂痕動畫
-                document.getElementById('quake-overlay').classList.add('active');
-                
-                // 處理撕裂位移與跳轉邏輯
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        // 左半邊向左下方傾斜滑出
-                        leftClone.style.transform = 'translate(-35vw, 8vh) rotate(-4deg)';
-                        leftClone.style.opacity = '0';
-                        
-                        // 右半邊向右上方傾斜滑出
-                        rightClone.style.transform = 'translate(35vw, -8vh) rotate(4deg)';
-                        rightClone.style.opacity = '0';
-                    });
-                });
-
-                // 動畫結束後，正式跳轉到目標網址
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 1000);
-
-            }, 600);
-        }
-    </script>
-</body>
-</html>
+                        <a class="quake-link" href="https://github.com/zxcvbnm010043-bot/seismology_HW11_final_report/blob/main/HW_overleaf/seismology_final_report.
