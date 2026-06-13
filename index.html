@@ -384,7 +384,7 @@
                     </div>
                     <div class="link-group">
                         <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
-                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="simple">CH4 報告 (Overleaf)</a>
+                        <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
                     </div>
                     <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
                 </div>
@@ -397,12 +397,12 @@
                      
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📄 地震學期末整合報告 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_report.pdf"></iframe>
                     </div>
 
                     <div class="pdf-viewer">
                         <div class="pdf-title-bar">📊 地震學期末發表簡報 (PDF 預覽)</div>
-                        <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf&embedded=true"></iframe>
+                        <iframe loading="lazy" src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW_overleaf/seismology_final_presentation.pdf"></iframe>
                     </div>
 
                     <div class="link-group" style="margin-top: 15px;">
@@ -532,7 +532,7 @@
                 // 觸發中央發光裂痕動畫
                 document.getElementById('quake-overlay').classList.add('active');
                  
-                // 補齊原先被截斷的撕裂位移與跳轉邏輯
+                // 處理撕裂位移與跳轉邏輯
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
                         // 左半邊向左下方傾斜滑出
