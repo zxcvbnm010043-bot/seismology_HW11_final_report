@@ -114,7 +114,28 @@
         }
         .content:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(41, 121, 255, 0.15); }
         .date { font-weight: bold; color: #e74c3c; font-size: 1.2em; margin-bottom: 10px; }
-        .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; }
+        .title { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
+
+        /* 新增：反思與心得區塊樣式 */
+        .reflection {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(44, 62, 80, 0.04);
+            border-left: 3px solid #2979ff;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #4a5568;
+            text-align: justify;
+        }
+        .reflection::before {
+            content: "💡 學習反思：";
+            display: block;
+            font-weight: bold;
+            color: #2979ff;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+        }
 
         /* 圖片與 PDF 排版 */
         .image-gallery { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
@@ -228,6 +249,7 @@
                         <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/1b7875bf83000e413aecb1fb3d14c56d.png" alt="首頁圖片 2" onclick="openLightbox(this.src)">
                         <img src="https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW1/670af8d749721ca9de84a2459e1cf36e.png" alt="首頁圖片 3" onclick="openLightbox(this.src)">
                     </div>
+                    <div class="reflection">學習新的 AI 工具 antigravity，並成功搭配 Hugging Face 與 GitHub 建立起往後專案開發與協作的基礎工作流。</div>
                 </div>
             </div>
 
@@ -236,6 +258,7 @@
                     <div class="date">03/04</div>
                     <div class="title">地震學課本第一章</div>
                     <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_ch1/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">建置結構完整的電子化課本筆記，利用 GitHub Pages 平台將地震學第一章的靜態網頁與理論基礎進行線上可視化呈現。</div>
                 </div>
             </div>
 
@@ -253,6 +276,10 @@
                         <div class="pdf-title-bar">🤖 AI 演講成果</div>
                         <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW3/%E5%9C%B0%E9%9C%87%E5%AD%B8-AI%E6%BC%94%E8%AC%9B.pdf&embedded=true"></iframe>
                     </div>
+                    <div class="reflection">
+                        <strong>海底火山爆發：</strong>嘗試運用全新的 Prompt 技巧驅使 AI 進行深度統整，使生成的地震報告能具備更高規格的詳細說明。<br>
+                        <strong>演講心得：</strong>深刻思索與探討 AI 在現今科研與學術界中的定位。學會如何掌握主導權、更具效益地利用 AI 作為輔助工具，而非盲目被其技術所制約。
+                    </div>
                 </div>
             </div>
 
@@ -260,7 +287,8 @@
                 <div class="content">
                     <div class="date">03/18</div>
                     <div class="title">地震學實驗</div>
-                    <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismiology_experience" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">實際操作 SmartSolo 節點式地震儀進行微震監測，掌握了野外儀器架設的技術細節。同時，利用 Python 讀取微震實驗所得的 SAC 檔案，並透過 ObsPy 庫進行完整的地震學波形資料分析。</div>
                 </div>
             </div>
 
@@ -268,7 +296,11 @@
                 <div class="content">
                     <div class="date">04/01</div>
                     <div class="title">參觀國家地震工程研究中心</div>
-                    <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="link-group">
+                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW5/" onclick="triggerQuake(event, this.href)">進入網站 (HW5)</a>
+                        <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW4/" onclick="triggerQuake(event, this.href)">進入網站 (HW4)</a>
+                    </div>
+                    <div class="reflection">實地走訪國家地震工程研究中心 (NCREE)，全面認識其核心業務與震災防禦手段。導覽深入介紹了多種結構阻尼器的工程應用，並直觀理解地震來襲時不同阻尼器所展現的減震與抗震效能。</div>
                 </div>
             </div>
 
@@ -276,6 +308,7 @@
                 <div class="content">
                     <div class="date">04/15</div>
                     <div class="title">期中考</div>
+                    <div class="reflection">驗收前半學期以來關於地震波傳播理論、震源參數以及走時曲線推導等核心知識的掌握程度。</div>
                 </div>
             </div>
 
@@ -288,6 +321,7 @@
                         <div class="pdf-title-bar">📝 宋冠毅老師演講心得</div>
                         <iframe loading="lazy" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/zxcvbnm010043-bot/seismology_HW11_final_report/main/HW6/%E4%BD%9C%E6%A5%AD6-%E5%AE%8B%E5%86%A0%E6%AF%85%E8%80%81%E5%B8%AB%E6%BC%94%E8%AC%9B%E5%BF%83%E5%BE%97.pdf&embedded=true"></iframe>
                     </div>
+                    <div class="reflection">聆聽宋冠毅老師分享豐富的海外留學與科研經歷。演講中特別介紹了「青年百億海外留學計畫」等相關寶貴資訊，勉勵我們保持國際視野，勇敢跳出舒適圈，積極爭取涉外拓展的機會。</div>
                 </div>
             </div>
 
@@ -296,6 +330,7 @@
                     <div class="date">04/29</div>
                     <div class="title">地震學第3章</div>
                     <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_HW7_CH3/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">透過 GitHub 整合與排版地震學課本第三章內容，重點針對複雜的波動方程與幾何射線理論進行圖文並茂的條理解析。</div>
                 </div>
             </div>
 
@@ -307,6 +342,7 @@
                         <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_ch4" onclick="triggerQuake(event, this.href)">CH4 震源機制網站</a>
                         <a class="quake-link" href="https://huggingface.co/spaces/Lee010043/seismology_HW10" onclick="triggerQuake(event, this.href)">初動解繪製震源機制</a>
                     </div>
+                    <div class="reflection">深入探討震源機制球（海灘球）的核心物理意義。學會使用投影網手繪震源機制的圖解原理，並進一步結合實際測站的 P 波初動觀測資料（壓、張力觀測），在網頁端程式化繪製出精確的震源機制解。</div>
                 </div>
             </div>
 
@@ -315,6 +351,7 @@
                     <div class="date">05/27</div>
                     <div class="title">Raspberry Pi 體驗</div>
                     <a class="quake-link" href="https://zxcvbnm010043-bot.github.io/seismology_raspberryPi/" onclick="triggerQuake(event, this.href)">進入網站</a>
+                    <div class="reflection">實作微型地震儀開發：學習硬體開發板與麵包板的接線技術（了解接錯接地線引發失火的危險性）。成功將加速度感測器的搖晃訊號與 Discord API 串接，實作即時地震警報發布機制，並繪製出關鍵 5 秒內的加速度位移圖，依據峰值大小科學性地評估地震強度。</div>
                 </div>
             </div>
 
@@ -349,6 +386,7 @@
                         <a class="quake-link" href="https://www.overleaf.com/read/nnmdsscpmwtx#cec550" onclick="triggerQuake(event, this.href)">CH4 投影片 (Overleaf)</a>
                         <a class="quake-link" href="https://www.overleaf.com/read/twsjzyrpfrtd#861af5" onclick="triggerQuake(event, this.href)">CH4 報告 (Overleaf)</a>
                     </div>
+                    <div class="reflection">進階掌握 Overleaf 與 LaTeX 學術排版。深入探討了簡報經常發生中文編碼錯誤的核心機制：源於 Overleaf 處理 ASCII 編碼時，特定中文字的 Big5/UTF-8 後端位元組恰巧含有十六進制的 <code>5C</code>（即標準斜線符號 <code>\</code>，如許、功、蓋等字）。當系統讀取到結尾 <code>5C</code> 時會誤判為轉義指令，從而導致編碼潰散或出現無效符號，這項底層邏輯的釐清大幅提升了往後 debug 的效率。</div>
                 </div>
             </div>
 
@@ -356,10 +394,13 @@
                 <div class="content highlight-final">
                     <div class="date">06/10 <span class="final-badge">🔥 FINAL</span></div>
                     <div class="title" style="font-weight: bold; color: #2c3e50; margin-bottom: 0;">期末報告</div>
+                    <div class="reflection">集結整學期於理論研究（CH1、CH3、CH4 專業報告）、實地工程考察（NCREE）、野外儀器觀測（SmartSolo 儀器與 ObsPy 分析）及物聯網邊緣運算（Raspberry Pi 預警系統）的豐碩成果，完成了這份高完整度的地震學期末整合報告。</div>
                 </div>
             </div>
         </div>
-    </div> <script>
+    </div>
+
+    <script>
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const dropsContainer = document.getElementById('ink-drops-container');
